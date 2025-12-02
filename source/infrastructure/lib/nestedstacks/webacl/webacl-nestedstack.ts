@@ -1,6 +1,11 @@
 #!/usr/bin/env node
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 // SPDX-License-Identifier: Apache-2.0
+/**
+ * Modified in accordance with the license:
+ * Added parameters, conditions, and action overrides.
+ * Copyright 2005-2025 Kuali, Inc.  All rights reserved.
+ */
 
 /**
  * @description
@@ -156,9 +161,25 @@ export class WebaclNestedstack extends NestedStack {
       },
     );
 
+    const actionForAWSManagedRules = new cdk.CfnParameter(
+      this,
+      "ActionForAWSManagedRulesParam",
+      {
+        type: "String",
+      },
+    );
+
     const activateAWSManagedAP = new cdk.CfnParameter(
       this,
       "ActivateAWSManagedAPParam",
+      {
+        type: "String",
+      },
+    );
+
+    const actionForAWSManagedAP = new cdk.CfnParameter(
+      this,
+      "ActionForAWSManagedAPParam",
       {
         type: "String",
       },
@@ -172,9 +193,25 @@ export class WebaclNestedstack extends NestedStack {
       },
     );
 
+    const actionForAWSManagedKBI = new cdk.CfnParameter(
+      this,
+      "ActionForAWSManagedKBIParam",
+      {
+        type: "String",
+      },
+    );
+
     const activateAWSManagedIPR = new cdk.CfnParameter(
       this,
       "ActivateAWSManagedIPRParam",
+      {
+        type: "String",
+      },
+    );
+
+    const actionForAWSManagedIPR = new cdk.CfnParameter(
+      this,
+      "ActionForAWSManagedIPRParam",
       {
         type: "String",
       },
@@ -188,9 +225,25 @@ export class WebaclNestedstack extends NestedStack {
       },
     );
 
+    const actionForAWSManagedAIP = new cdk.CfnParameter(
+      this,
+      "ActionForAWSManagedAIPParam",
+      {
+        type: "String",
+      },
+    );
+
     const activateAWSManagedSQL = new cdk.CfnParameter(
       this,
       "ActivateAWSManagedSQLParam",
+      {
+        type: "String",
+      },
+    );
+
+    const actionForAWSManagedSQL = new cdk.CfnParameter(
+      this,
+      "ActionForAWSManagedSQLParam",
       {
         type: "String",
       },
@@ -204,9 +257,25 @@ export class WebaclNestedstack extends NestedStack {
       },
     );
 
+    const actionForAWSManagedLinux = new cdk.CfnParameter(
+      this,
+      "ActionForAWSManagedLinuxParam",
+      {
+        type: "String",
+      },
+    );
+
     const activateAWSManagedPOSIX = new cdk.CfnParameter(
       this,
       "ActivateAWSManagedPOSIXParam",
+      {
+        type: "String",
+      },
+    );
+
+    const actionForAWSManagedPOSIX = new cdk.CfnParameter(
+      this,
+      "ActionForAWSManagedPOSIXParam",
       {
         type: "String",
       },
@@ -220,9 +289,25 @@ export class WebaclNestedstack extends NestedStack {
       },
     );
 
+    const actionForAWSManagedWindows = new cdk.CfnParameter(
+      this,
+      "ActionForAWSManagedWindowsParam",
+      {
+        type: "String",
+      },
+    );
+
     const activateAWSManagedPHP = new cdk.CfnParameter(
       this,
       "ActivateAWSManagedPHPParam",
+      {
+        type: "String",
+      },
+    );
+
+    const actionForAWSManagedPHP = new cdk.CfnParameter(
+      this,
+      "ActionForAWSManagedPHPParam",
       {
         type: "String",
       },
@@ -236,9 +321,25 @@ export class WebaclNestedstack extends NestedStack {
       },
     );
 
+    const actionForAWSManagedWP = new cdk.CfnParameter(
+      this,
+      "ActionForAWSManagedWPParam",
+      {
+        type: "String",
+      },
+    );
+
     const activateSqlInjectionProtection = new cdk.CfnParameter(
       this,
       "ActivateSqlInjectionProtectionParam",
+      {
+        type: "String",
+      },
+    );
+
+    const actionForSqlInjectionProtection = new cdk.CfnParameter(
+      this,
+      "ActionForSqlInjectionProtectionParam",
       {
         type: "String",
       },
@@ -252,9 +353,25 @@ export class WebaclNestedstack extends NestedStack {
       },
     );
 
+    const actionForCrossSiteScriptingProtection = new cdk.CfnParameter(
+      this,
+      "ActionForCrossSiteScriptingProtectionParam",
+      {
+        type: "String",
+      },
+    );
+
     const activateHttpFloodProtection = new cdk.CfnParameter(
       this,
       "ActivateHttpFloodProtectionParam",
+      {
+        type: "String",
+      },
+    );
+
+    const actionForHttpFloodProtection = new cdk.CfnParameter(
+      this,
+      "ActionForHttpFloodProtectionParam",
       {
         type: "String",
       },
@@ -268,6 +385,14 @@ export class WebaclNestedstack extends NestedStack {
       },
     );
 
+    const actionForScannersProbesProtection = new cdk.CfnParameter(
+      this,
+      "ActionForScannersProbesProtectionParam",
+      {
+        type: "String",
+      },
+    );
+
     const activateReputationListsProtection = new cdk.CfnParameter(
       this,
       "ActivateReputationListsProtectionParam",
@@ -276,9 +401,25 @@ export class WebaclNestedstack extends NestedStack {
       },
     );
 
+    const actionForReputationListsProtection = new cdk.CfnParameter(
+      this,
+      "ActionForReputationListsProtectionParam",
+      {
+        type: "String",
+      },
+    );
+
     const activateBadBotProtectionParam = new cdk.CfnParameter(
       this,
       "ActivateBadBotProtectionParam",
+      {
+        type: "String",
+      },
+    );
+
+    const actionForBadBotProtection = new cdk.CfnParameter(
+      this,
+      "ActionForBadBotProtectionParam",
       {
         type: "String",
       },
@@ -365,11 +506,27 @@ export class WebaclNestedstack extends NestedStack {
       },
     );
 
+    const awsManagedCRSActionOverridden = new cdk.CfnCondition(
+      this,
+      "AWSManagedCRSActionOverridden",
+      {
+        expression: cdk.Fn.conditionEquals(actionForAWSManagedRules, "count"),
+      },
+    );
+
     const awsManagedAPActivated = new cdk.CfnCondition(
       this,
       "AWSManagedAPActivated",
       {
         expression: cdk.Fn.conditionEquals(activateAWSManagedAP, "yes"),
+      },
+    );
+
+    const awsManagedAPActionOverridden = new cdk.CfnCondition(
+      this,
+      "AWSManagedAPActionOverridden",
+      {
+        expression: cdk.Fn.conditionEquals(actionForAWSManagedAP, "count"),
       },
     );
 
@@ -381,11 +538,27 @@ export class WebaclNestedstack extends NestedStack {
       },
     );
 
+    const awsManagedKBIActionOverridden = new cdk.CfnCondition(
+      this,
+      "AWSManagedKBIActionOverridden",
+      {
+        expression: cdk.Fn.conditionEquals(actionForAWSManagedKBI, "count"),
+      },
+    );
+
     const awsManagedIPRActivated = new cdk.CfnCondition(
       this,
       "AWSManagedIPRActivated",
       {
         expression: cdk.Fn.conditionEquals(activateAWSManagedIPR, "yes"),
+      },
+    );
+
+    const awsManagedIPRActionOverridden = new cdk.CfnCondition(
+      this,
+      "AWSManagedIPRActionOverridden",
+      {
+        expression: cdk.Fn.conditionEquals(actionForAWSManagedIPR, "count"),
       },
     );
 
@@ -397,11 +570,27 @@ export class WebaclNestedstack extends NestedStack {
       },
     );
 
+    const awsManagedAIPActionOverridden = new cdk.CfnCondition(
+      this,
+      "AWSManagedAIPActionOverridden",
+      {
+        expression: cdk.Fn.conditionEquals(actionForAWSManagedAIP, "count"),
+      },
+    );
+
     const awsManagedSQLActivated = new cdk.CfnCondition(
       this,
       "AWSManagedSQLActivated",
       {
         expression: cdk.Fn.conditionEquals(activateAWSManagedSQL, "yes"),
+      },
+    );
+
+    const awsManagedSQLActionOverridden = new cdk.CfnCondition(
+      this,
+      "AWSManagedSQLActionOverridden",
+      {
+        expression: cdk.Fn.conditionEquals(actionForAWSManagedSQL, "count"),
       },
     );
 
@@ -413,11 +602,27 @@ export class WebaclNestedstack extends NestedStack {
       },
     );
 
+    const awsManagedLinuxActionOverridden = new cdk.CfnCondition(
+      this,
+      "AWSManagedLinuxActionOverridden",
+      {
+        expression: cdk.Fn.conditionEquals(actionForAWSManagedLinux, "count"),
+      },
+    );
+
     const awsManagedPOSIXActivated = new cdk.CfnCondition(
       this,
       "AWSManagedPOSIXActivated",
       {
         expression: cdk.Fn.conditionEquals(activateAWSManagedPOSIX, "yes"),
+      },
+    );
+
+    const awsManagedPOSIXActionOverridden = new cdk.CfnCondition(
+      this,
+      "AWSManagedPOSIXActionOverridden",
+      {
+        expression: cdk.Fn.conditionEquals(actionForAWSManagedPOSIX, "count"),
       },
     );
 
@@ -429,11 +634,27 @@ export class WebaclNestedstack extends NestedStack {
       },
     );
 
+    const awsManagedWindowsActionOverridden = new cdk.CfnCondition(
+      this,
+      "AWSManagedWindowsActionOverridden",
+      {
+        expression: cdk.Fn.conditionEquals(actionForAWSManagedWindows, "count"),
+      },
+    );
+
     const awsManagedPHPActivated = new cdk.CfnCondition(
       this,
       "AWSManagedPHPActivated",
       {
         expression: cdk.Fn.conditionEquals(activateAWSManagedPHP, "yes"),
+      },
+    );
+
+    const awsManagedPHPActionOverridden = new cdk.CfnCondition(
+      this,
+      "AWSManagedPHPActionOverridden",
+      {
+        expression: cdk.Fn.conditionEquals(actionForAWSManagedPHP, "count"),
       },
     );
 
@@ -445,12 +666,31 @@ export class WebaclNestedstack extends NestedStack {
       },
     );
 
+    const awsManagedWPActionOverridden = new cdk.CfnCondition(
+      this,
+      "AWSManagedWPActionOverridden",
+      {
+        expression: cdk.Fn.conditionEquals(actionForAWSManagedWP, "count"),
+      },
+    );
+
     const sqlInjectionProtectionActivated = new cdk.CfnCondition(
       this,
       "SqlInjectionProtectionActivated",
       {
         expression: cdk.Fn.conditionNot(
           cdk.Fn.conditionEquals(activateSqlInjectionProtection, "no"),
+        ),
+      },
+    );
+
+    const sqlInjectionProtectionActionOverridden = new cdk.CfnCondition(
+      this,
+      "SqlInjectionProtectionActionOverridden",
+      {
+        expression: cdk.Fn.conditionEquals(
+          actionForSqlInjectionProtection,
+          "count",
         ),
       },
     );
@@ -494,6 +734,17 @@ export class WebaclNestedstack extends NestedStack {
       {
         expression: cdk.Fn.conditionNot(
           cdk.Fn.conditionEquals(activateCrossSiteScriptingProtection, "no"),
+        ),
+      },
+    );
+
+    const crossSiteScriptingProtectionActionOverridden = new cdk.CfnCondition(
+      this,
+      "CrossSiteScriptingProtectionActionOverridden",
+      {
+        expression: cdk.Fn.conditionEquals(
+          actionForCrossSiteScriptingProtection,
+          "count",
         ),
       },
     );
@@ -564,6 +815,14 @@ export class WebaclNestedstack extends NestedStack {
       },
     );
 
+    const httpFloodProtectionActionOverridden = new CfnCondition(
+      this,
+      "HttpFloodProtectionActionOverridden",
+      {
+        expression: Fn.conditionEquals(actionForHttpFloodProtection, "count"),
+      },
+    );
+
     const httpFloodProtectionRateBasedRuleActivated = new cdk.CfnCondition(
       this,
       "HttpFloodProtectionRateBasedRuleActivated",
@@ -608,6 +867,17 @@ export class WebaclNestedstack extends NestedStack {
       },
     );
 
+    const scannersProbesProtectionActionOverridden = new cdk.CfnCondition(
+      this,
+      "ScannersProbesProtectionActionOverridden",
+      {
+        expression: cdk.Fn.conditionEquals(
+          actionForScannersProbesProtection,
+          "count",
+        ),
+      },
+    );
+
     const reputationListsProtectionActivated = new cdk.CfnCondition(
       this,
       "ReputationListsProtectionActivated",
@@ -615,6 +885,17 @@ export class WebaclNestedstack extends NestedStack {
         expression: cdk.Fn.conditionEquals(
           activateReputationListsProtection,
           "yes",
+        ),
+      },
+    );
+
+    const reputationListsProtectionActionOverridden = new cdk.CfnCondition(
+      this,
+      "ReputationListsProtectionActionOverridden",
+      {
+        expression: cdk.Fn.conditionEquals(
+          actionForReputationListsProtection,
+          "count",
         ),
       },
     );
@@ -627,6 +908,14 @@ export class WebaclNestedstack extends NestedStack {
           activateBadBotProtectionParam,
           "yes",
         ),
+      },
+    );
+
+    const badBotProtectionActionOverridden = new cdk.CfnCondition(
+      this,
+      "BadBotProtectionActionOverridden",
+      {
+        expression: cdk.Fn.conditionEquals(actionForBadBotProtection, "count"),
       },
     );
 
@@ -1125,9 +1414,11 @@ export class WebaclNestedstack extends NestedStack {
           {
             Name: "AWS-AWSManagedRulesCommonRuleSet",
             Priority: 6,
-            OverrideAction: {
-              None: {},
-            },
+            OverrideAction: cdk.Fn.conditionIf(
+              awsManagedCRSActionOverridden.logicalId,
+              { Count: {} },
+              { None: {} },
+            ),
             VisibilityConfig: {
               SampledRequestsEnabled: true,
               CloudWatchMetricsEnabled: true,
@@ -1148,9 +1439,11 @@ export class WebaclNestedstack extends NestedStack {
           {
             Name: "AWS-AWSManagedRulesAdminProtectionRuleSet",
             Priority: 7,
-            OverrideAction: {
-              None: {},
-            },
+            OverrideAction: cdk.Fn.conditionIf(
+              awsManagedAPActionOverridden.logicalId,
+              { Count: {} },
+              { None: {} },
+            ),
             VisibilityConfig: {
               SampledRequestsEnabled: true,
               CloudWatchMetricsEnabled: true,
@@ -1177,9 +1470,11 @@ export class WebaclNestedstack extends NestedStack {
           {
             Name: "AWS-AWSManagedRulesKnownBadInputsRuleSet",
             Priority: 8,
-            OverrideAction: {
-              None: {},
-            },
+            OverrideAction: cdk.Fn.conditionIf(
+              awsManagedKBIActionOverridden.logicalId,
+              { Count: {} },
+              { None: {} },
+            ),
             VisibilityConfig: {
               SampledRequestsEnabled: true,
               CloudWatchMetricsEnabled: true,
@@ -1206,9 +1501,11 @@ export class WebaclNestedstack extends NestedStack {
           {
             Name: "AWS-AWSManagedRulesAmazonIpReputationList",
             Priority: 2,
-            OverrideAction: {
-              None: {},
-            },
+            OverrideAction: cdk.Fn.conditionIf(
+              awsManagedIPRActionOverridden.logicalId,
+              { Count: {} },
+              { None: {} },
+            ),
             VisibilityConfig: {
               SampledRequestsEnabled: true,
               CloudWatchMetricsEnabled: true,
@@ -1235,9 +1532,11 @@ export class WebaclNestedstack extends NestedStack {
           {
             Name: "AWS-AWSManagedRulesAnonymousIpList",
             Priority: 4,
-            OverrideAction: {
-              None: {},
-            },
+            OverrideAction: cdk.Fn.conditionIf(
+              awsManagedAIPActionOverridden.logicalId,
+              { Count: {} },
+              { None: {} },
+            ),
             VisibilityConfig: {
               SampledRequestsEnabled: true,
               CloudWatchMetricsEnabled: true,
@@ -1264,9 +1563,11 @@ export class WebaclNestedstack extends NestedStack {
           {
             Name: "AWS-AWSManagedRulesSQLiRuleSet",
             Priority: 14,
-            OverrideAction: {
-              None: {},
-            },
+            OverrideAction: cdk.Fn.conditionIf(
+              awsManagedSQLActionOverridden.logicalId,
+              { Count: {} },
+              { None: {} },
+            ),
             VisibilityConfig: {
               SampledRequestsEnabled: true,
               CloudWatchMetricsEnabled: true,
@@ -1293,9 +1594,11 @@ export class WebaclNestedstack extends NestedStack {
           {
             Name: "AWS-AWSManagedRulesLinuxRuleSet",
             Priority: 11,
-            OverrideAction: {
-              None: {},
-            },
+            OverrideAction: cdk.Fn.conditionIf(
+              awsManagedLinuxActionOverridden.logicalId,
+              { Count: {} },
+              { None: {} },
+            ),
             VisibilityConfig: {
               SampledRequestsEnabled: true,
               CloudWatchMetricsEnabled: true,
@@ -1322,9 +1625,11 @@ export class WebaclNestedstack extends NestedStack {
           {
             Name: "AWS-AWSManagedRulesUnixRuleSet",
             Priority: 10,
-            OverrideAction: {
-              None: {},
-            },
+            OverrideAction: cdk.Fn.conditionIf(
+              awsManagedPOSIXActionOverridden.logicalId,
+              { Count: {} },
+              { None: {} },
+            ),
             VisibilityConfig: {
               SampledRequestsEnabled: true,
               CloudWatchMetricsEnabled: true,
@@ -1351,9 +1656,11 @@ export class WebaclNestedstack extends NestedStack {
           {
             Name: "AWS-AWSManagedRulesWindowsRuleSet",
             Priority: 9,
-            OverrideAction: {
-              None: {},
-            },
+            OverrideAction: cdk.Fn.conditionIf(
+              awsManagedWindowsActionOverridden.logicalId,
+              { Count: {} },
+              { None: {} },
+            ),
             VisibilityConfig: {
               SampledRequestsEnabled: true,
               CloudWatchMetricsEnabled: true,
@@ -1380,9 +1687,11 @@ export class WebaclNestedstack extends NestedStack {
           {
             Name: "AWS-AWSManagedRulesPHPRuleSet",
             Priority: 12,
-            OverrideAction: {
-              None: {},
-            },
+            OverrideAction: cdk.Fn.conditionIf(
+              awsManagedPHPActionOverridden.logicalId,
+              { Count: {} },
+              { None: {} },
+            ),
             VisibilityConfig: {
               SampledRequestsEnabled: true,
               CloudWatchMetricsEnabled: true,
@@ -1409,9 +1718,11 @@ export class WebaclNestedstack extends NestedStack {
           {
             Name: "AWS-AWSManagedRulesWordPressRuleSet",
             Priority: 13,
-            OverrideAction: {
-              None: {},
-            },
+            OverrideAction: cdk.Fn.conditionIf(
+              awsManagedWPActionOverridden.logicalId,
+              { Count: {} },
+              { None: {} },
+            ),
             VisibilityConfig: {
               SampledRequestsEnabled: true,
               CloudWatchMetricsEnabled: true,
@@ -1439,9 +1750,11 @@ export class WebaclNestedstack extends NestedStack {
           {
             Name: cdk.Fn.sub("${ParentStackName}HttpFloodRegularRule"),
             Priority: 18,
-            Action: {
-              Block: {},
-            },
+            Action: cdk.Fn.conditionIf(
+              httpFloodProtectionActionOverridden.logicalId,
+              { Count: {} },
+              { Block: {} },
+            ),
             VisibilityConfig: {
               SampledRequestsEnabled: true,
               CloudWatchMetricsEnabled: true,
@@ -1478,9 +1791,11 @@ export class WebaclNestedstack extends NestedStack {
           {
             Name: cdk.Fn.sub("${ParentStackName}HttpFloodRateBasedRule"),
             Priority: 19,
-            Action: {
-              Block: {},
-            },
+            Action: cdk.Fn.conditionIf(
+              httpFloodProtectionActionOverridden.logicalId,
+              { Count: {} },
+              { Block: {} },
+            ),
             VisibilityConfig: {
               SampledRequestsEnabled: true,
               CloudWatchMetricsEnabled: true,
@@ -1555,9 +1870,11 @@ export class WebaclNestedstack extends NestedStack {
           {
             Name: cdk.Fn.sub("${ParentStackName}ScannersAndProbesRule"),
             Priority: 17,
-            Action: {
-              Block: {},
-            },
+            Action: cdk.Fn.conditionIf(
+              scannersProbesProtectionActionOverridden.logicalId,
+              { Count: {} },
+              { Block: {} },
+            ),
             VisibilityConfig: {
               SampledRequestsEnabled: true,
               CloudWatchMetricsEnabled: true,
@@ -1594,9 +1911,11 @@ export class WebaclNestedstack extends NestedStack {
           {
             Name: cdk.Fn.sub("${ParentStackName}IPReputationListsRule"),
             Priority: 3,
-            Action: {
-              Block: {},
-            },
+            Action: cdk.Fn.conditionIf(
+              reputationListsProtectionActionOverridden.logicalId,
+              { Count: {} },
+              { Block: {} },
+            ),
             VisibilityConfig: {
               SampledRequestsEnabled: true,
               CloudWatchMetricsEnabled: true,
@@ -1633,9 +1952,11 @@ export class WebaclNestedstack extends NestedStack {
           {
             Name: cdk.Fn.sub("${ParentStackName}BadBotRule"),
             Priority: 5,
-            Action: {
-              Block: {},
-            },
+            Action: cdk.Fn.conditionIf(
+              badBotProtectionActionOverridden.logicalId,
+              { Count: {} },
+              { Block: {} },
+            ),
             VisibilityConfig: {
               SampledRequestsEnabled: true,
               CloudWatchMetricsEnabled: true,
@@ -1672,9 +1993,11 @@ export class WebaclNestedstack extends NestedStack {
           {
             Name: cdk.Fn.sub("${ParentStackName}SqlInjectionRule"),
             Priority: 15,
-            Action: {
-              Block: {},
-            },
+            Action: cdk.Fn.conditionIf(
+              sqlInjectionProtectionActionOverridden.logicalId,
+              { Count: {} },
+              { Block: {} },
+            ),
             VisibilityConfig: {
               SampledRequestsEnabled: true,
               CloudWatchMetricsEnabled: true,
@@ -1819,9 +2142,11 @@ export class WebaclNestedstack extends NestedStack {
           {
             Name: cdk.Fn.sub("${ParentStackName}XssRule"),
             Priority: 16,
-            Action: {
-              Block: {},
-            },
+            Action: cdk.Fn.conditionIf(
+              crossSiteScriptingProtectionActionOverridden.logicalId,
+              { Count: {} },
+              { Block: {} },
+            ),
             VisibilityConfig: {
               SampledRequestsEnabled: true,
               CloudWatchMetricsEnabled: true,
@@ -1931,9 +2256,11 @@ export class WebaclNestedstack extends NestedStack {
           {
             Name: cdk.Fn.sub("${ParentStackName}BadBotRuleFilter"),
             Priority: 20,
-            Action: {
-              Block: {},
-            },
+            Action: cdk.Fn.conditionIf(
+              badBotProtectionActionOverridden.logicalId,
+              { Count: {} },
+              { Block: {} },
+            ),
             VisibilityConfig: {
               SampledRequestsEnabled: true,
               CloudWatchMetricsEnabled: true,

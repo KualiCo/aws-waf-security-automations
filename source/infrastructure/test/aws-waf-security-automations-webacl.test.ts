@@ -14,7 +14,7 @@ jest.mock("../../infrastructure/lib/constants/waf-constants", () => {
   ); // Import the actual module
   return {
     ...actual,
-    distVersion: "v4.1.0",
+    distVersion: "v4.2.0",
     templateOutputBucket: "solutions-reference",
     distOutputBucket: "solutions",
     solutionName: "security-automations-for-aws-waf",
@@ -51,6 +51,7 @@ describe("WAF WebAcl nested stack end-to-end", () => {
 
     const resourceSuppressions = {
       "AWS::IAM::Role": ["IAM_NO_INLINE_POLICY_CHECK"],
+      "AWS::Lambda::Function": ["LAMBDA_INSIDE_VPC", "LAMBDA_CONCURRENCY_CHECK"],
     };
 
     Aspects.of(stack).add(

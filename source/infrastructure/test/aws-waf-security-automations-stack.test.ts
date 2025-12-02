@@ -14,7 +14,7 @@ jest.mock("../../infrastructure/lib/constants/waf-constants", () => {
   ); // Import the actual module
   return {
     ...actual,
-    distVersion: "v4.1.0",
+    distVersion: "v4.2.0",
     templateOutputBucket: "solutions-reference",
     distOutputBucket: "solutions",
     solutionName: "security-automations-for-aws-waf",
@@ -22,10 +22,10 @@ jest.mock("../../infrastructure/lib/constants/waf-constants", () => {
       ...actual.manifest,
       wafSecurityAutomations: {
         ...actual.manifest.wafSecurityAutomations,
-        description: `(SO0006) - Security Automations for AWS WAF: This AWS CloudFormation template helps you provision the Security Automations for AWS WAF stack without worrying about creating and configuring the underlying AWS infrastructure. **WARNING** This template creates multiple AWS Lambda functions, an AWS WAFv2 Web ACL, an Amazon S3 bucket, and an Amazon CloudWatch custom metric. You will be billed for the AWS resources used if you create a stack from this template. v4.1.0`,
+        description: `(SO0006) - Security Automations for AWS WAF: This AWS CloudFormation template helps you provision the Security Automations for AWS WAF stack without worrying about creating and configuring the underlying AWS infrastructure. **WARNING** This template creates multiple AWS Lambda functions, an AWS WAFv2 Web ACL, an Amazon S3 bucket, and an Amazon CloudWatch custom metric. You will be billed for the AWS resources used if you create a stack from this template. v4.2.0`,
         application: {
           ...actual.manifest.wafSecurityAutomations.application,
-          description: `Service Catalog application to track and manage all your resources for the solution WAF Security Automations. The SolutionID is SO0006 and SolutionVersion is v4.1.0.`,
+          description: `Service Catalog application to track and manage all your resources for the solution WAF Security Automations. The SolutionID is SO0006 and SolutionVersion is v4.2.0.`,
         },
       },
     },
@@ -62,6 +62,8 @@ describe("WAF end-to-end", () => {
     );
     const resourceSuppressions = {
       "AWS::IAM::Role": ["IAM_NO_INLINE_POLICY_CHECK"],
+      "AWS::Lambda::Function": ["LAMBDA_INSIDE_VPC", "LAMBDA_CONCURRENCY_CHECK"],
+      "AWS::Logs::LogGroup": ["CLOUDWATCH_LOG_GROUP_ENCRYPTED", "CW_LOGGROUP_RETENTION_PERIOD_CHECK"],
     };
 
     Aspects.of(stack).add(

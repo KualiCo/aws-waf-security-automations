@@ -14,7 +14,7 @@ jest.mock("../../infrastructure/lib/constants/waf-constants", () => {
   ); // Import the actual module
   return {
     ...actual,
-    distVersion: "v4.1.0",
+    distVersion: "v4.2.0",
     templateOutputBucket: "solutions-reference",
     distOutputBucket: "solutions",
     solutionName: "security-automations-for-aws-waf",

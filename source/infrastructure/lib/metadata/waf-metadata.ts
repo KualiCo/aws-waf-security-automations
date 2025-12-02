@@ -25,32 +25,44 @@ export class WafMetadata extends Construct {
             Label: { default: "AWS Managed IP Reputation Rule Groups" },
             Parameters: [
               props.parameters.activateAWSManagedIPR.logicalId,
+              props.parameters.actionForAWSManagedIPR.logicalId,
               props.parameters.activateAWSManagedAIP.logicalId,
+              props.parameters.actionForAWSManagedAIP.logicalId,
             ],
           },
           {
             Label: { default: "AWS Managed Baseline Rule Groups" },
             Parameters: [
               props.parameters.activateAWSManagedRules.logicalId,
+              props.parameters.actionForAWSManagedRules.logicalId,
               props.parameters.activateAWSManagedAP.logicalId,
+              props.parameters.actionForAWSManagedAP.logicalId,
               props.parameters.activateAWSManagedKBI.logicalId,
+              props.parameters.actionForAWSManagedKBI.logicalId,
             ],
           },
           {
             Label: { default: "AWS Managed Use-case Specific Rule Groups" },
             Parameters: [
               props.parameters.activateAWSManagedSQL.logicalId,
+              props.parameters.actionForAWSManagedSQL.logicalId,
               props.parameters.activateAWSManagedLinux.logicalId,
+              props.parameters.actionForAWSManagedLinux.logicalId,
               props.parameters.activateAWSManagedPOSIX.logicalId,
+              props.parameters.actionForAWSManagedPOSIX.logicalId,
               props.parameters.activateAWSManagedWindows.logicalId,
+              props.parameters.actionForAWSManagedWindows.logicalId,
               props.parameters.activateAWSManagedPHP.logicalId,
+              props.parameters.actionForAWSManagedPHP.logicalId,
               props.parameters.activateAWSManagedWP.logicalId,
+              props.parameters.actionForAWSManagedWP.logicalId,
             ],
           },
           {
             Label: { default: "Custom Rule - Scanner & Probes" },
             Parameters: [
               props.parameters.activateScannersProbesProtection.logicalId,
+              props.parameters.actionForScannersProbesProtection.logicalId,
               props.parameters.appAccessLogBucket.logicalId,
               props.parameters.appAccessLogBucketPrefix.logicalId,
               props.parameters.appAccessLogBucketLoggingStatus.logicalId,
@@ -62,6 +74,7 @@ export class WafMetadata extends Construct {
             Label: { default: "Custom Rule - HTTP Flood" },
             Parameters: [
               props.parameters.activateHttpFloodProtection.logicalId,
+              props.parameters.actionForHttpFloodProtection.logicalId,
               props.parameters.requestThreshold.logicalId,
               props.parameters.requestThresholdByCountry.logicalId,
               props.parameters.httpFloodAthenaQueryGroupBy.logicalId,
@@ -74,20 +87,26 @@ export class WafMetadata extends Construct {
           },
           {
             Label: { default: "Custom Rule - Bad Bot" },
-            Parameters: [props.parameters.activateBadBotProtection.logicalId],
+            Parameters: [
+              props.parameters.activateBadBotProtection.logicalId,
+              props.parameters.actionForBadBotProtection.logicalId,
+            ],
           },
           {
             Label: { default: "Custom Rule - Third Party IP Reputation Lists" },
             Parameters: [
               props.parameters.activateReputationListsProtection.logicalId,
+              props.parameters.actionForReputationListsProtection.logicalId,
             ],
           },
           {
             Label: { default: "Legacy Custom Rules" },
             Parameters: [
               props.parameters.activateSqlInjectionProtection.logicalId,
+              props.parameters.actionForSqlInjectionProtection.logicalId,
               props.parameters.sqlInjectionProtectionSensitivityLevel.logicalId,
               props.parameters.activateCrossSiteScriptingProtection.logicalId,
+              props.parameters.actionForCrossSiteScriptingProtection.logicalId,
             ],
           },
           {
@@ -163,6 +182,65 @@ export class WafMetadata extends Construct {
           },
           [props.parameters.activateBadBotProtection.logicalId]: {
             default: "Activate Bad Bot Protection",
+          },
+          [props.parameters.actionForAWSManagedRules.logicalId]: {
+            default: "Core Rule Set Managed Rule Group Protection Action",
+          },
+          [props.parameters.actionForAWSManagedAP.logicalId]: {
+            default: "Admin Protection Managed Rule Group Protection Action",
+          },
+          [props.parameters.actionForAWSManagedKBI.logicalId]: {
+            default: "Known Bad Inputs Managed Rule Group Protection Action",
+          },
+          [props.parameters.actionForAWSManagedIPR.logicalId]: {
+            default:
+              "Amazon IP reputation List Managed Rule Group Protection Action",
+          },
+          [props.parameters.actionForAWSManagedAIP.logicalId]: {
+            default: "Anonymous IP List Managed Rule Group Protection Action",
+          },
+          [props.parameters.actionForAWSManagedSQL.logicalId]: {
+            default: "SQL Database Managed Rule Group Protection Action",
+          },
+          [props.parameters.actionForAWSManagedLinux.logicalId]: {
+            default:
+              "Linux Operating System Managed Rule Group Protection Action",
+          },
+          [props.parameters.actionForAWSManagedPOSIX.logicalId]: {
+            default:
+              "POSIX Operating System Managed Rule Group Protection Action",
+          },
+          [props.parameters.actionForAWSManagedWindows.logicalId]: {
+            default:
+              "Windows Operating System Managed Rule Group Protection Action",
+          },
+          [props.parameters.actionForAWSManagedPHP.logicalId]: {
+            default: "PHP Application Managed Rule Group Protection Action",
+          },
+          [props.parameters.actionForAWSManagedWP.logicalId]: {
+            default:
+              "WordPress Application Managed Rule Group Protection Action",
+          },
+          [props.parameters.actionForSqlInjectionProtection.logicalId]: {
+            default: "SQL Injection Protection Action",
+          },
+          [props.parameters.sqlInjectionProtectionSensitivityLevel.logicalId]: {
+            default: "Sensitivity Level for SQL Injection Protection",
+          },
+          [props.parameters.actionForCrossSiteScriptingProtection.logicalId]: {
+            default: "Cross-site Scripting Protection Action",
+          },
+          [props.parameters.actionForHttpFloodProtection.logicalId]: {
+            default: "HTTP Flood Protection Action",
+          },
+          [props.parameters.actionForScannersProbesProtection.logicalId]: {
+            default: "Scanner & Probe Protection Action",
+          },
+          [props.parameters.actionForReputationListsProtection.logicalId]: {
+            default: "Reputation List Protection Action",
+          },
+          [props.parameters.actionForBadBotProtection.logicalId]: {
+            default: "Bad Bot Protection Action",
           },
           [props.parameters.endpointType.logicalId]: { default: "Endpoint" },
           [props.parameters.appAccessLogBucket.logicalId]: {
