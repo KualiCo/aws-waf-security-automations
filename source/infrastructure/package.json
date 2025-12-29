@@ -1,6 +1,6 @@
 {
   "name": "@amzn/aws-waf-security-automations",
-  "version": "4.1.0",
+  "version": "4.1.1",
   "bin": {
     "infrastructure": "bin/aws-waf-security-automations.js"
   },
