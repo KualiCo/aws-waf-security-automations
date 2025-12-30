@@ -179,9 +179,9 @@ This project consists of microservices that facilitate the functional areas of t
 
 ---
 
-# Collection of operational metrics
+## Data Collection
 
-This solution collects anonymized operational metrics to help AWS improve the quality and features of the solution. For more information, including how to disable this capability, please see the [implementation guide](https://docs.aws.amazon.com/solutions/latest/security-automations-for-aws-waf/reference.html).
+This solution sends operational metrics to AWS (the “Data”) about the use of this solution. We use this Data to better understand how customers use this solution and related services and products. AWS’s collection of this Data is subject to the [AWS Privacy Notice](https://aws.amazon.com/privacy/).
 
 
 ---

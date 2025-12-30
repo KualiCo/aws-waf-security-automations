@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [4.1.1] - 2025-12-29
+
+### Security
+
+- Updated urllib3 to version 2.6.1 to address [CVE-2025-66418](https://nvd.nist.gov/vuln/detail/CVE-2025-66418) and [CVE-2025-66471](https://nvd.nist.gov/vuln/detail/CVE-2025-66471)
+- Updated js-yaml to version 4.1.1 to address [CVE-2025-64718](https://nvd.nist.gov/vuln/detail/CVE-2025-64718)
+- Updated werkzeug to version 3.1.4 to address [CVE-2025-66221](https://nvd.nist.gov/vuln/detail/CVE-2025-66221)
+
 ## [4.1.0] - 2025-07-30
 
 ### Added
@@ -23,8 +31,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Updated datetime deprecated method for utcnow() to now(datetime.UTC)
 - Updated bad bot component behavior with improved log parsing support and detection logic
 - Updated waflib api, remove redundant calls
-- Removed http request based approach for IP detection and added WAF log based analysis to find ip for bad bot
 - Updated temporary folders restrictions
+- Changed metrics collection services
 
 ### Fixed
 
@@ -35,7 +43,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Removed
 
 - Removed old stack templates
-- Access handler and Amazon API Gateway resources
+- Removed access handler and Amazon API Gateway resources
+- Removed http request based approach for IP detection and added WAF log based analysis to find ip for bad bot
+- Removed Service Catalog AppRegistry integration
 
 ## [4.0.6] - 2024-12-17
 
