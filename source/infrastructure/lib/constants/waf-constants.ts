@@ -2,11 +2,12 @@
 // SPDX-License-Identifier: Apache-2.0
 
 export const solutionId = process.env["SOLUTION_ID"] || "SO0006";
-export const distVersion = process.env["VERSION"] || "%%VERSION%%";
+export const distVersion = process.env["VERSION"] || "v4.2.0";
 export const templateOutputBucket =
-  process.env["TEMPLATE_OUTPUT_BUCKET"] || "%%TEMPLATE_OUTPUT_BUCKET%%";
+  process.env["TEMPLATE_OUTPUT_BUCKET"] ||
+  "cdk-hnb659fds-assets-461840362716-us-west-2";
 export const distOutputBucket =
-  process.env["DIST_OUTPUT_BUCKET"] || "%%DIST_OUTPUT_BUCKET%%";
+  process.env["DIST_OUTPUT_BUCKET"] || "cdk-hnb659fds-assets-461840362716";
 export const solutionName = process.env["SOLUTION_NAME"] || "%%SOLUTION_NAME%%";
 
 export const manifest = {

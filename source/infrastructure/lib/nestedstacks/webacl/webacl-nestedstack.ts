@@ -27,7 +27,10 @@ import * as iam from "aws-cdk-lib/aws-iam";
 import * as lambda from "aws-cdk-lib/aws-lambda";
 import * as wafv2 from "aws-cdk-lib/aws-wafv2";
 import { SourceCodeMapping } from "../../mappings/sourcecode";
-import { webaclManifest } from "./constants/webacl-constants";
+import {
+  wafWhitelistSetV4Addresses,
+  webaclManifest,
+} from "./constants/webacl-constants";
 import {
   distOutputBucket,
   distVersion,
@@ -1194,7 +1197,7 @@ export class WebaclNestedstack extends NestedStack {
       ipAddressVersion: "IPV4",
       name: cdk.Fn.sub("${ParentStackName}WhitelistSetIPV4"),
       description: "Allow List for IPV4 addresses",
-      addresses: [],
+      addresses: wafWhitelistSetV4Addresses,
     });
     wafWhitelistSetV4.addOverride("DependsOn", timerWhiteV4.node.id);
 

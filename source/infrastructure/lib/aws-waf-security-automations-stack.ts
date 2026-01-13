@@ -558,7 +558,7 @@ export class AwsWafSecurityAutomationsStack extends Stack {
         "ActivateScannersProbesProtectionParam",
         {
           type: "String",
-          default: "yes - AWS Lambda log parser",
+          default: "yes - Amazon Athena log parser",
           allowedValues: [
             "yes - AWS Lambda log parser",
             "yes - Amazon Athena log parser",
@@ -648,7 +648,7 @@ export class AwsWafSecurityAutomationsStack extends Stack {
 
       endpointType: new CfnParameter(this, "EndpointType", {
         type: "String",
-        default: "CloudFront",
+        default: "ALB",
         allowedValues: ["CloudFront", "ALB"],
         description:
           "Select the resource type and then select the resource below that you want to associate with this web ACL.",
@@ -682,7 +682,7 @@ export class AwsWafSecurityAutomationsStack extends Stack {
         "AppAccessLogBucketLoggingStatusParam",
         {
           type: "String",
-          default: "no",
+          default: "yes",
           allowedValues: ["yes", "no"],
           description:
             "Choose yes if you provided an existing application access log bucket above and the server access logging for the bucket is already turned on. If you chose no, the solution will turn on server access logging for your bucket. If you deactivate Scanners & Probes Protection, ignore this parameter.",
@@ -691,7 +691,7 @@ export class AwsWafSecurityAutomationsStack extends Stack {
 
       errorThreshold: new CfnParameter(this, "ErrorThreshold", {
         type: "Number",
-        default: 50,
+        default: 20,
         minValue: 0,
         description: [
           "If you chose yes for the Activate Scanners & Probes Protection parameter, enter the maximum",
@@ -702,7 +702,7 @@ export class AwsWafSecurityAutomationsStack extends Stack {
 
       requestThreshold: new CfnParameter(this, "RequestThreshold", {
         type: "Number",
-        default: 100,
+        default: 500,
         minValue: 0,
         description: [
           "If you chose yes for the Activate HTTP Flood Protection parameter, enter the maximum",
@@ -758,7 +758,7 @@ export class AwsWafSecurityAutomationsStack extends Stack {
 
       wafBlockPeriod: new CfnParameter(this, "WAFBlockPeriod", {
         type: "Number",
-        default: 240,
+        default: 2880,
         minValue: 0,
         description: [
           "If you chose yes for the Activate Scanners & Probes Protection or HTTP Flood Lambda/Athena log",
@@ -906,7 +906,7 @@ export class AwsWafSecurityAutomationsStack extends Stack {
 
       timeWindowThreshold: new CfnParameter(this, "TimeWindowThresholdParam", {
         type: "Number",
-        default: 5,
+        default: 10,
         allowedValues: ["1", "2", "5", "10"],
         description:
           "Time window threshold in minutes for Activate Scanners & Probes Protection or HTTP Flood. Applies to both rate-based rule and lambda log parser.",

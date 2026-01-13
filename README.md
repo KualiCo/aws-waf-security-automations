@@ -4,14 +4,22 @@
 
 ## Table of contents
 
-- [Solution Overview](#solution-overview)
-- [Architecture Diagram](#architecture-diagram)
-- [Customizing the Solution](#customizing-the-solution)
-  - [Prerequisites for Customization](#prerequisites-for-customization)
+- [Solution overview](#solution-overview)
+- [Architecture diagram](#architecture-diagram)
+- [Customizing the solution](#customizing-the-solution)
+  - [Prerequisites for customization](#prerequisites-for-customization)
   - [Build](#build)
-  - [Upload Deployment Assets](#upload-deployment-assets)
+      - [1. Clone the repository](#1-clone-the-repository)
+      - [2. Unit test](#2-unit-test)
+      - [3. Create S3 buckets for storing deployment assets](#3-create-s3-buckets-for-storing-deployment-assets)
+      - [4. Declare environment variables](#4-declare-environment-variables)
+      - [5. Build the solution](#5-build-the-solution)
+  - [Upload deployment assets](#upload-deployment-assets)
   - [Deploy](#deploy)
-- [File Structure](#file-structure)
+      - [1. Option to deploy the template in the S3 bucket](#1-option-to-deploy-the-template-in-the-s3-bucket)
+      - [2. Option to deploy using the ```cdk deploy``` command.](#2-option-to-deploy-using-the-cdk-deploy-command)
+- [File structure](#file-structure)
+- [Collection of operational metrics](#collection-of-operational-metrics)
 - [License](#license)
 
 ---
@@ -106,9 +114,9 @@ AWS Solutions use two buckets:
 
 The assets in buckets must be accessible by your account.
 
-#### 4. Declare enviroment variables
+#### 4. Declare environment variables
 
-```
+```bash
 export TEMPLATE_OUTPUT_BUCKET=<YOUR_TEMPLATE_OUTPUT_BUCKET> # Name of the global bucket where CloudFormation templates are stored
 export DIST_OUTPUT_BUCKET=<YOUR_DIST_OUTPUT_BUCKET> # Name for the regional bucket where regional assets are stored
 export SOLUTION_NAME=<SOLUTION_NAME> # name of the solution.
@@ -118,7 +126,7 @@ export AWS_REGION=<AWS_REGION> # region where the solution is deployed
 
 #### 5. Build the solution
 
-```
+```bash
 cd <rootDir>/deployment
 chmod +x ./build-s3-dist.sh && ./build-s3-dist.sh $TEMPLATE_OUTPUT_BUCKET $DIST_OUTPUT_BUCKET $SOLUTION_NAME $VERSION
 ```
