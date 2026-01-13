@@ -40,7 +40,7 @@ describe("WAF WebAcl nested stack end-to-end", () => {
 
     const stack = new AwsWafSecurityAutomationsStack(
       app,
-      "aws-waf-security-automations",
+      AwsWafSecurityAutomationsStack.ID,
       {
         analyticsReporting: false, // CDK::Metadata breaks deployment in some regions
         synthesizer: new DefaultStackSynthesizer({

@@ -841,7 +841,10 @@
   "WAFWhitelistSetV4": {
    "Type": "AWS::WAFv2::IPSet",
    "Properties": {
-    "Addresses": [],
+    "Addresses": [
+     "52.35.176.121/32",
+     "50.112.66.144/32"
+    ],
     "Description": "Allow List for IPV4 addresses",
     "IPAddressVersion": "IPV4",
     "Name": {

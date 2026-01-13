@@ -1,987 +1,987 @@
 {
-  "Description": "(SO0006-FA) - Security Automations for AWS WAF - FA: This AWS CloudFormation template helps you provision the Security Automations for AWS WAF stack without worrying about creating and configuring the underlying AWS infrastructure. **WARNING** This template creates an AWS Lambda function, an AWS WAF Web ACL, an Amazon S3 bucket, and an Amazon CloudWatch custom metric. You will be billed for the AWS resources used if you create a stack from this template. v4.2.0",
-  "AWSTemplateFormatVersion": "2010-09-09",
-  "Parameters": {
-    "TimeWindowThresholdParam": {
-      "Type": "Number"
+ "Description": "(SO0006-FA) - Security Automations for AWS WAF - FA: This AWS CloudFormation template helps you provision the Security Automations for AWS WAF stack without worrying about creating and configuring the underlying AWS infrastructure. **WARNING** This template creates an AWS Lambda function, an AWS WAF Web ACL, an Amazon S3 bucket, and an Amazon CloudWatch custom metric. You will be billed for the AWS resources used if you create a stack from this template. v4.2.0",
+ "AWSTemplateFormatVersion": "2010-09-09",
+ "Parameters": {
+  "TimeWindowThresholdParam": {
+   "Type": "Number"
+  },
+  "ActivateHttpFloodProtectionParam": {
+   "Type": "String"
+  },
+  "ActivateScannersProbesProtectionParam": {
+   "Type": "String"
+  },
+  "EndpointType": {
+   "Type": "String"
+  },
+  "AppAccessLogBucket": {
+   "Type": "String"
+  },
+  "ParentStackName": {
+   "Type": "String"
+  },
+  "WafLogBucket": {
+   "Type": "String"
+  },
+  "WafLogBucketArn": {
+   "Type": "String"
+  },
+  "RequestThreshold": {
+   "Type": "String"
+  },
+  "ErrorThreshold": {
+   "Type": "String"
+  },
+  "WAFBlockPeriod": {
+   "Type": "String"
+  },
+  "GlueDatabaseName": {
+   "Type": "String"
+  },
+  "DeliveryStreamName": {
+   "Type": "String"
+  },
+  "UUID": {
+   "Type": "String"
+  },
+  "ActivateBadBotProtectionParam": {
+   "Type": "String"
+  }
+ },
+ "Conditions": {
+  "AlbEndpoint": {
+   "Fn::Equals": [
+    {
+     "Ref": "EndpointType"
     },
-    "ActivateHttpFloodProtectionParam": {
-      "Type": "String"
+    "ALB"
+   ]
+  },
+  "CloudFrontEndpoint": {
+   "Fn::Not": [
+    {
+     "Condition": "AlbEndpoint"
+    }
+   ]
+  },
+  "HttpFloodLambdaLogParser": {
+   "Fn::Equals": [
+    {
+     "Ref": "ActivateHttpFloodProtectionParam"
     },
-    "ActivateScannersProbesProtectionParam": {
-      "Type": "String"
+    "yes - AWS Lambda log parser"
+   ]
+  },
+  "HttpFloodAthenaLogParser": {
+   "Fn::Equals": [
+    {
+     "Ref": "ActivateHttpFloodProtectionParam"
     },
-    "EndpointType": {
-      "Type": "String"
+    "yes - Amazon Athena log parser"
+   ]
+  },
+  "ScannersProbesAthenaLogParser": {
+   "Fn::Equals": [
+    {
+     "Ref": "ActivateScannersProbesProtectionParam"
     },
-    "AppAccessLogBucket": {
-      "Type": "String"
+    "yes - Amazon Athena log parser"
+   ]
+  },
+  "ALBScannersProbesAthenaLogParser": {
+   "Fn::And": [
+    {
+     "Condition": "ScannersProbesAthenaLogParser"
     },
-    "ParentStackName": {
-      "Type": "String"
+    {
+     "Condition": "AlbEndpoint"
+    }
+   ]
+  },
+  "CloudFrontScannersProbesAthenaLogParser": {
+   "Fn::And": [
+    {
+     "Condition": "ScannersProbesAthenaLogParser"
     },
-    "WafLogBucket": {
-      "Type": "String"
+    {
+     "Condition": "CloudFrontEndpoint"
+    }
+   ]
+  },
+  "ScannersProbesLambdaLogParser": {
+   "Fn::Equals": [
+    {
+     "Ref": "ActivateScannersProbesProtectionParam"
     },
-    "WafLogBucketArn": {
-      "Type": "String"
+    "yes - AWS Lambda log parser"
+   ]
+  },
+  "AthenaLogParser": {
+   "Fn::Or": [
+    {
+     "Condition": "HttpFloodAthenaLogParser"
     },
-    "RequestThreshold": {
-      "Type": "String"
+    {
+     "Condition": "ScannersProbesAthenaLogParser"
+    }
+   ]
+  },
+  "BadBotProtectionActivated": {
+   "Fn::Equals": [
+    {
+     "Ref": "ActivateBadBotProtectionParam"
     },
-    "ErrorThreshold": {
-      "Type": "String"
+    "yes"
+   ]
+  },
+  "BadBotLambdaLogParserActivated": {
+   "Fn::And": [
+    {
+     "Fn::Not": [
+      {
+       "Condition": "HttpFloodLambdaLogParser"
+      }
+     ]
     },
-    "WAFBlockPeriod": {
-      "Type": "String"
+    {
+     "Fn::Not": [
+      {
+       "Condition": "ScannersProbesLambdaLogParser"
+      }
+     ]
     },
-    "GlueDatabaseName": {
-      "Type": "String"
+    {
+     "Fn::Not": [
+      {
+       "Condition": "HttpFloodAthenaLogParser"
+      }
+     ]
+    },
+    {
+     "Fn::Not": [
+      {
+       "Condition": "ScannersProbesAthenaLogParser"
+      }
+     ]
+    },
+    {
+     "Condition": "BadBotProtectionActivated"
+    }
+   ]
+  },
+  "HttpFloodProtectionActivated": {
+   "Fn::Or": [
+    {
+     "Condition": "HttpFloodLambdaLogParser"
+    },
+    {
+     "Condition": "HttpFloodAthenaLogParser"
+    }
+   ]
+  },
+  "HttpFloodProtectionLogParserActivated": {
+   "Fn::Or": [
+    {
+     "Condition": "HttpFloodProtectionActivated"
+    },
+    {
+     "Condition": "BadBotLambdaLogParserActivated"
+    }
+   ]
+  }
+ },
+ "Mappings": {
+  "TimeWindowMap": {
+   "1": {
+    "seconds": 60
+   },
+   "2": {
+    "seconds": 120
+   },
+   "5": {
+    "seconds": 300
+   },
+   "10": {
+    "seconds": 600
+   }
+  }
+ },
+ "Resources": {
+  "FirehoseWAFLogsDeliveryStreamRole": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "firehose.amazonaws.com"
+       },
+       "Action": "sts:AssumeRole",
+       "Condition": {
+        "StringEquals": {
+         "sts:ExternalId": {
+          "Ref": "AWS::AccountId"
+         }
+        }
+       }
+      }
+     ]
+    },
+    "Policies": [
+     {
+      "PolicyDocument": {
+       "Statement": [
+        {
+         "Effect": "Allow",
+         "Action": [
+          "s3:AbortMultipartUpload",
+          "s3:GetBucketLocation",
+          "s3:GetObject",
+          "s3:ListBucket",
+          "s3:ListBucketMultipartUploads",
+          "s3:PutObject"
+         ],
+         "Resource": [
+          {
+           "Fn::Sub": "arn:${AWS::Partition}:s3:::${WafLogBucket}"
+          },
+          {
+           "Fn::Sub": "arn:${AWS::Partition}:s3:::${WafLogBucket}/*"
+          }
+         ]
+        }
+       ]
+      },
+      "PolicyName": "S3Access"
+     },
+     {
+      "PolicyDocument": {
+       "Statement": [
+        {
+         "Effect": "Allow",
+         "Action": [
+          "kinesis:DescribeStream",
+          "kinesis:GetShardIterator",
+          "kinesis:GetRecords"
+         ],
+         "Resource": [
+          {
+           "Fn::Sub": "arn:${AWS::Partition}:kinesis:${AWS::Region}:${AWS::AccountId}:stream/${DeliveryStreamName}"
+          }
+         ]
+        }
+       ]
+      },
+      "PolicyName": "KinesisAccess"
+     },
+     {
+      "PolicyDocument": {
+       "Statement": [
+        {
+         "Effect": "Allow",
+         "Action": [
+          "logs:PutLogEvents"
+         ],
+         "Resource": [
+          {
+           "Fn::Sub": "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/kinesisfirehose/${DeliveryStreamName}:*"
+          }
+         ]
+        }
+       ]
+      },
+      "PolicyName": "CloudWatchAccess"
+     }
+    ]
+   },
+   "Metadata": {
+    "cfn_nag": {
+     "rules_to_suppress": [
+      {
+       "id": "W11",
+       "reason": "S3Access restricted to WafLogBucket and CloudWatchAccess to DeliveryStreamName."
+      }
+     ]
+    },
+    "guard": {
+     "SuppressedRules": [
+      "IAM_NO_INLINE_POLICY_CHECK"
+     ]
+    }
+   },
+   "Condition": "HttpFloodProtectionLogParserActivated"
+  },
+  "FirehoseWAFLogsDeliveryStream": {
+   "Type": "AWS::KinesisFirehose::DeliveryStream",
+   "Properties": {
+    "DeliveryStreamEncryptionConfigurationInput": {
+     "KeyType": "AWS_OWNED_CMK"
     },
     "DeliveryStreamName": {
-      "Type": "String"
+     "Ref": "DeliveryStreamName"
     },
-    "UUID": {
-      "Type": "String"
-    },
-    "ActivateBadBotProtectionParam": {
-      "Type": "String"
+    "DeliveryStreamType": "DirectPut",
+    "ExtendedS3DestinationConfiguration": {
+     "BucketARN": {
+      "Ref": "WafLogBucketArn"
+     },
+     "BufferingHints": {
+      "IntervalInSeconds": {
+       "Fn::If": [
+        "HttpFloodLambdaLogParser",
+        {
+         "Fn::FindInMap": [
+          "TimeWindowMap",
+          {
+           "Ref": "TimeWindowThresholdParam"
+          },
+          "seconds"
+         ]
+        },
+        300
+       ]
+      },
+      "SizeInMBs": 5
+     },
+     "CompressionFormat": "GZIP",
+     "ErrorOutputPrefix": "AWSErrorLogs/result=!{firehose:error-output-type}/year=!{timestamp:yyyy}/month=!{timestamp:MM}/day=!{timestamp:dd}/hour=!{timestamp:HH}/",
+     "Prefix": "AWSLogs/year=!{timestamp:yyyy}/month=!{timestamp:MM}/day=!{timestamp:dd}/hour=!{timestamp:HH}/",
+     "RoleARN": {
+      "Fn::GetAtt": [
+       "FirehoseWAFLogsDeliveryStreamRole",
+       "Arn"
+      ]
+     }
     }
-  },
-  "Conditions": {
-    "AlbEndpoint": {
-      "Fn::Equals": [
-        {
-          "Ref": "EndpointType"
-        },
-        "ALB"
-      ]
-    },
-    "CloudFrontEndpoint": {
-      "Fn::Not": [
-        {
-          "Condition": "AlbEndpoint"
-        }
-      ]
-    },
-    "HttpFloodLambdaLogParser": {
-      "Fn::Equals": [
-        {
-          "Ref": "ActivateHttpFloodProtectionParam"
-        },
-        "yes - AWS Lambda log parser"
-      ]
-    },
-    "HttpFloodAthenaLogParser": {
-      "Fn::Equals": [
-        {
-          "Ref": "ActivateHttpFloodProtectionParam"
-        },
-        "yes - Amazon Athena log parser"
-      ]
-    },
-    "ScannersProbesAthenaLogParser": {
-      "Fn::Equals": [
-        {
-          "Ref": "ActivateScannersProbesProtectionParam"
-        },
-        "yes - Amazon Athena log parser"
-      ]
-    },
-    "ALBScannersProbesAthenaLogParser": {
-      "Fn::And": [
-        {
-          "Condition": "ScannersProbesAthenaLogParser"
-        },
-        {
-          "Condition": "AlbEndpoint"
-        }
-      ]
-    },
-    "CloudFrontScannersProbesAthenaLogParser": {
-      "Fn::And": [
-        {
-          "Condition": "ScannersProbesAthenaLogParser"
-        },
-        {
-          "Condition": "CloudFrontEndpoint"
-        }
-      ]
-    },
-    "ScannersProbesLambdaLogParser": {
-      "Fn::Equals": [
-        {
-          "Ref": "ActivateScannersProbesProtectionParam"
-        },
-        "yes - AWS Lambda log parser"
-      ]
-    },
-    "AthenaLogParser": {
-      "Fn::Or": [
-        {
-          "Condition": "HttpFloodAthenaLogParser"
-        },
-        {
-          "Condition": "ScannersProbesAthenaLogParser"
-        }
-      ]
-    },
-    "BadBotProtectionActivated": {
-      "Fn::Equals": [
-        {
-          "Ref": "ActivateBadBotProtectionParam"
-        },
-        "yes"
-      ]
-    },
-    "BadBotLambdaLogParserActivated": {
-      "Fn::And": [
-        {
-          "Fn::Not": [
-            {
-              "Condition": "HttpFloodLambdaLogParser"
-            }
-          ]
-        },
-        {
-          "Fn::Not": [
-            {
-              "Condition": "ScannersProbesLambdaLogParser"
-            }
-          ]
-        },
-        {
-          "Fn::Not": [
-            {
-              "Condition": "HttpFloodAthenaLogParser"
-            }
-          ]
-        },
-        {
-          "Fn::Not": [
-            {
-              "Condition": "ScannersProbesAthenaLogParser"
-            }
-          ]
-        },
-        {
-          "Condition": "BadBotProtectionActivated"
-        }
-      ]
-    },
-    "HttpFloodProtectionActivated": {
-      "Fn::Or": [
-        {
-          "Condition": "HttpFloodLambdaLogParser"
-        },
-        {
-          "Condition": "HttpFloodAthenaLogParser"
-        }
-      ]
-    },
-    "HttpFloodProtectionLogParserActivated": {
-      "Fn::Or": [
-        {
-          "Condition": "HttpFloodProtectionActivated"
-        },
-        {
-          "Condition": "BadBotLambdaLogParserActivated"
-        }
-      ]
+   },
+   "Metadata": {
+    "guard": {
+     "SuppressedRules": [
+      "KINESIS_FIREHOSE_REDSHIFT_DESTINATION_CONFIGURATION_NO_PLAINTEXT_PASSWORD",
+      "KINESIS_FIREHOSE_SPLUNK_DESTINATION_CONFIGURATION_NO_PLAINTEXT_PASSWORD"
+     ]
     }
+   },
+   "Condition": "HttpFloodProtectionLogParserActivated"
   },
-  "Mappings": {
-    "TimeWindowMap": {
-      "1": {
-        "seconds": 60
+  "GlueAccessLogsDatabase": {
+   "Type": "AWS::Glue::Database",
+   "Properties": {
+    "CatalogId": {
+     "Ref": "AWS::AccountId"
+    },
+    "DatabaseInput": {
+     "Description": {
+      "Fn::Sub": "${ParentStackName} - Access Logs"
+     },
+     "Name": {
+      "Ref": "GlueDatabaseName"
+     }
+    }
+   },
+   "Condition": "AthenaLogParser"
+  },
+  "GlueWafAccessLogsTable": {
+   "Type": "AWS::Glue::Table",
+   "Properties": {
+    "CatalogId": {
+     "Ref": "AWS::AccountId"
+    },
+    "DatabaseName": {
+     "Ref": "GlueAccessLogsDatabase"
+    },
+    "TableInput": {
+     "Name": "waf_access_logs",
+     "Parameters": {
+      "EXTERNAL": "TRUE"
+     },
+     "PartitionKeys": [
+      {
+       "Name": "year",
+       "Type": "int"
       },
-      "2": {
-        "seconds": 120
+      {
+       "Name": "month",
+       "Type": "int"
       },
-      "5": {
-        "seconds": 300
+      {
+       "Name": "day",
+       "Type": "int"
       },
-      "10": {
-        "seconds": 600
+      {
+       "Name": "hour",
+       "Type": "int"
       }
+     ],
+     "StorageDescriptor": {
+      "Columns": [
+       {
+        "Name": "timestamp",
+        "Type": "bigint"
+       },
+       {
+        "Name": "formatversion",
+        "Type": "int"
+       },
+       {
+        "Name": "webaclid",
+        "Type": "string"
+       },
+       {
+        "Name": "terminatingruleid",
+        "Type": "string"
+       },
+       {
+        "Name": "terminatingruletype",
+        "Type": "string"
+       },
+       {
+        "Name": "action",
+        "Type": "string"
+       },
+       {
+        "Name": "httpsourcename",
+        "Type": "string"
+       },
+       {
+        "Name": "httpsourceid",
+        "Type": "string"
+       },
+       {
+        "Name": "rulegrouplist",
+        "Type": "array<string>"
+       },
+       {
+        "Name": "ratebasedrulelist",
+        "Type": "array<string>"
+       },
+       {
+        "Name": "nonterminatingmatchingrules",
+        "Type": "array<string>"
+       },
+       {
+        "Name": "httprequest",
+        "Type": "struct<clientip:string,country:string,headers:array<struct<name:string,value:string>>,uri:string,args:string,httpversion:string,httpmethod:string,requestid:string>"
+       }
+      ],
+      "Compressed": true,
+      "InputFormat": "org.apache.hadoop.mapred.TextInputFormat",
+      "Location": {
+       "Fn::Sub": "s3://${WafLogBucket}/AWSLogs/"
+      },
+      "OutputFormat": "org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat",
+      "SerdeInfo": {
+       "Parameters": {
+        "paths": "action,formatVersion,httpRequest,httpSourceId,httpSourceName,nonTerminatingMatchingRules,rateBasedRuleList,ruleGroupList,terminatingRuleId,terminatingRuleType,timestamp,webaclId"
+       },
+       "SerializationLibrary": "org.openx.data.jsonserde.JsonSerDe"
+      },
+      "StoredAsSubDirectories": false
+     }
     }
+   },
+   "Condition": "HttpFloodAthenaLogParser"
   },
-  "Resources": {
-    "FirehoseWAFLogsDeliveryStreamRole": {
-      "Type": "AWS::IAM::Role",
-      "Properties": {
-        "AssumeRolePolicyDocument": {
-          "Statement": [
-            {
-              "Effect": "Allow",
-              "Principal": {
-                "Service": "firehose.amazonaws.com"
-              },
-              "Action": "sts:AssumeRole",
-              "Condition": {
-                "StringEquals": {
-                  "sts:ExternalId": {
-                    "Ref": "AWS::AccountId"
-                  }
-                }
-              }
-            }
-          ]
-        },
-        "Policies": [
-          {
-            "PolicyDocument": {
-              "Statement": [
-                {
-                  "Effect": "Allow",
-                  "Action": [
-                    "s3:AbortMultipartUpload",
-                    "s3:GetBucketLocation",
-                    "s3:GetObject",
-                    "s3:ListBucket",
-                    "s3:ListBucketMultipartUploads",
-                    "s3:PutObject"
-                  ],
-                  "Resource": [
-                    {
-                      "Fn::Sub": "arn:${AWS::Partition}:s3:::${WafLogBucket}"
-                    },
-                    {
-                      "Fn::Sub": "arn:${AWS::Partition}:s3:::${WafLogBucket}/*"
-                    }
-                  ]
-                }
-              ]
-            },
-            "PolicyName": "S3Access"
-          },
-          {
-            "PolicyDocument": {
-              "Statement": [
-                {
-                  "Effect": "Allow",
-                  "Action": [
-                    "kinesis:DescribeStream",
-                    "kinesis:GetShardIterator",
-                    "kinesis:GetRecords"
-                  ],
-                  "Resource": [
-                    {
-                      "Fn::Sub": "arn:${AWS::Partition}:kinesis:${AWS::Region}:${AWS::AccountId}:stream/${DeliveryStreamName}"
-                    }
-                  ]
-                }
-              ]
-            },
-            "PolicyName": "KinesisAccess"
-          },
-          {
-            "PolicyDocument": {
-              "Statement": [
-                {
-                  "Effect": "Allow",
-                  "Action": [
-                    "logs:PutLogEvents"
-                  ],
-                  "Resource": [
-                    {
-                      "Fn::Sub": "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/kinesisfirehose/${DeliveryStreamName}:*"
-                    }
-                  ]
-                }
-              ]
-            },
-            "PolicyName": "CloudWatchAccess"
-          }
-        ]
-      },
-      "Metadata": {
-        "cfn_nag": {
-          "rules_to_suppress": [
-            {
-              "id": "W11",
-              "reason": "S3Access restricted to WafLogBucket and CloudWatchAccess to DeliveryStreamName."
-            }
-          ]
-        },
-        "guard": {
-          "SuppressedRules": [
-            "IAM_NO_INLINE_POLICY_CHECK"
-          ]
-        }
-      },
-      "Condition": "HttpFloodProtectionLogParserActivated"
+  "ALBGlueAppAccessLogsTable": {
+   "Type": "AWS::Glue::Table",
+   "Properties": {
+    "CatalogId": {
+     "Ref": "AWS::AccountId"
     },
-    "FirehoseWAFLogsDeliveryStream": {
-      "Type": "AWS::KinesisFirehose::DeliveryStream",
-      "Properties": {
-        "DeliveryStreamEncryptionConfigurationInput": {
-          "KeyType": "AWS_OWNED_CMK"
-        },
-        "DeliveryStreamName": {
-          "Ref": "DeliveryStreamName"
-        },
-        "DeliveryStreamType": "DirectPut",
-        "ExtendedS3DestinationConfiguration": {
-          "BucketARN": {
-            "Ref": "WafLogBucketArn"
-          },
-          "BufferingHints": {
-            "IntervalInSeconds": {
-              "Fn::If": [
-                "HttpFloodLambdaLogParser",
-                {
-                  "Fn::FindInMap": [
-                    "TimeWindowMap",
-                    {
-                      "Ref": "TimeWindowThresholdParam"
-                    },
-                    "seconds"
-                  ]
-                },
-                300
-              ]
-            },
-            "SizeInMBs": 5
-          },
-          "CompressionFormat": "GZIP",
-          "ErrorOutputPrefix": "AWSErrorLogs/result=!{firehose:error-output-type}/year=!{timestamp:yyyy}/month=!{timestamp:MM}/day=!{timestamp:dd}/hour=!{timestamp:HH}/",
-          "Prefix": "AWSLogs/year=!{timestamp:yyyy}/month=!{timestamp:MM}/day=!{timestamp:dd}/hour=!{timestamp:HH}/",
-          "RoleARN": {
-            "Fn::GetAtt": [
-              "FirehoseWAFLogsDeliveryStreamRole",
-              "Arn"
-            ]
-          }
-        }
-      },
-      "Metadata": {
-        "guard": {
-          "SuppressedRules": [
-            "KINESIS_FIREHOSE_REDSHIFT_DESTINATION_CONFIGURATION_NO_PLAINTEXT_PASSWORD",
-            "KINESIS_FIREHOSE_SPLUNK_DESTINATION_CONFIGURATION_NO_PLAINTEXT_PASSWORD"
-          ]
-        }
-      },
-      "Condition": "HttpFloodProtectionLogParserActivated"
+    "DatabaseName": {
+     "Ref": "GlueAccessLogsDatabase"
     },
-    "GlueAccessLogsDatabase": {
-      "Type": "AWS::Glue::Database",
-      "Properties": {
-        "CatalogId": {
-          "Ref": "AWS::AccountId"
-        },
-        "DatabaseInput": {
-          "Description": {
-            "Fn::Sub": "${ParentStackName} - Access Logs"
-          },
-          "Name": {
-            "Ref": "GlueDatabaseName"
-          }
-        }
+    "TableInput": {
+     "Description": {
+      "Fn::Sub": "${ParentStackName} - APP Access Logs"
+     },
+     "Name": "app_access_logs",
+     "Parameters": {
+      "EXTERNAL": "TRUE"
+     },
+     "PartitionKeys": [
+      {
+       "Name": "year",
+       "Type": "int"
       },
-      "Condition": "AthenaLogParser"
-    },
-    "GlueWafAccessLogsTable": {
-      "Type": "AWS::Glue::Table",
-      "Properties": {
-        "CatalogId": {
-          "Ref": "AWS::AccountId"
-        },
-        "DatabaseName": {
-          "Ref": "GlueAccessLogsDatabase"
-        },
-        "TableInput": {
-          "Name": "waf_access_logs",
-          "Parameters": {
-            "EXTERNAL": "TRUE"
-          },
-          "PartitionKeys": [
-            {
-              "Name": "year",
-              "Type": "int"
-            },
-            {
-              "Name": "month",
-              "Type": "int"
-            },
-            {
-              "Name": "day",
-              "Type": "int"
-            },
-            {
-              "Name": "hour",
-              "Type": "int"
-            }
-          ],
-          "StorageDescriptor": {
-            "Columns": [
-              {
-                "Name": "timestamp",
-                "Type": "bigint"
-              },
-              {
-                "Name": "formatversion",
-                "Type": "int"
-              },
-              {
-                "Name": "webaclid",
-                "Type": "string"
-              },
-              {
-                "Name": "terminatingruleid",
-                "Type": "string"
-              },
-              {
-                "Name": "terminatingruletype",
-                "Type": "string"
-              },
-              {
-                "Name": "action",
-                "Type": "string"
-              },
-              {
-                "Name": "httpsourcename",
-                "Type": "string"
-              },
-              {
-                "Name": "httpsourceid",
-                "Type": "string"
-              },
-              {
-                "Name": "rulegrouplist",
-                "Type": "array<string>"
-              },
-              {
-                "Name": "ratebasedrulelist",
-                "Type": "array<string>"
-              },
-              {
-                "Name": "nonterminatingmatchingrules",
-                "Type": "array<string>"
-              },
-              {
-                "Name": "httprequest",
-                "Type": "struct<clientip:string,country:string,headers:array<struct<name:string,value:string>>,uri:string,args:string,httpversion:string,httpmethod:string,requestid:string>"
-              }
-            ],
-            "Compressed": true,
-            "InputFormat": "org.apache.hadoop.mapred.TextInputFormat",
-            "Location": {
-              "Fn::Sub": "s3://${WafLogBucket}/AWSLogs/"
-            },
-            "OutputFormat": "org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat",
-            "SerdeInfo": {
-              "Parameters": {
-                "paths": "action,formatVersion,httpRequest,httpSourceId,httpSourceName,nonTerminatingMatchingRules,rateBasedRuleList,ruleGroupList,terminatingRuleId,terminatingRuleType,timestamp,webaclId"
-              },
-              "SerializationLibrary": "org.openx.data.jsonserde.JsonSerDe"
-            },
-            "StoredAsSubDirectories": false
-          }
-        }
+      {
+       "Name": "month",
+       "Type": "int"
       },
-      "Condition": "HttpFloodAthenaLogParser"
-    },
-    "ALBGlueAppAccessLogsTable": {
-      "Type": "AWS::Glue::Table",
-      "Properties": {
-        "CatalogId": {
-          "Ref": "AWS::AccountId"
-        },
-        "DatabaseName": {
-          "Ref": "GlueAccessLogsDatabase"
-        },
-        "TableInput": {
-          "Description": {
-            "Fn::Sub": "${ParentStackName} - APP Access Logs"
-          },
-          "Name": "app_access_logs",
-          "Parameters": {
-            "EXTERNAL": "TRUE"
-          },
-          "PartitionKeys": [
-            {
-              "Name": "year",
-              "Type": "int"
-            },
-            {
-              "Name": "month",
-              "Type": "int"
-            },
-            {
-              "Name": "day",
-              "Type": "int"
-            },
-            {
-              "Name": "hour",
-              "Type": "int"
-            }
-          ],
-          "StorageDescriptor": {
-            "Columns": [
-              {
-                "Name": "type",
-                "Type": "string"
-              },
-              {
-                "Name": "time",
-                "Type": "string"
-              },
-              {
-                "Name": "elb",
-                "Type": "string"
-              },
-              {
-                "Name": "client_ip",
-                "Type": "string"
-              },
-              {
-                "Name": "client_port",
-                "Type": "int"
-              },
-              {
-                "Name": "target_ip",
-                "Type": "string"
-              },
-              {
-                "Name": "target_port",
-                "Type": "int"
-              },
-              {
-                "Name": "request_processing_time",
-                "Type": "double"
-              },
-              {
-                "Name": "target_processing_time",
-                "Type": "double"
-              },
-              {
-                "Name": "response_processing_time",
-                "Type": "double"
-              },
-              {
-                "Name": "elb_status_code",
-                "Type": "string"
-              },
-              {
-                "Name": "target_status_code",
-                "Type": "string"
-              },
-              {
-                "Name": "received_bytes",
-                "Type": "bigint"
-              },
-              {
-                "Name": "sent_bytes",
-                "Type": "bigint"
-              },
-              {
-                "Name": "request_verb",
-                "Type": "string"
-              },
-              {
-                "Name": "request_url",
-                "Type": "string"
-              },
-              {
-                "Name": "request_proto",
-                "Type": "string"
-              },
-              {
-                "Name": "user_agent",
-                "Type": "string"
-              },
-              {
-                "Name": "ssl_cipher",
-                "Type": "string"
-              },
-              {
-                "Name": "ssl_protocol",
-                "Type": "string"
-              },
-              {
-                "Name": "target_group_arn",
-                "Type": "string"
-              },
-              {
-                "Name": "trace_id",
-                "Type": "string"
-              },
-              {
-                "Name": "domain_name",
-                "Type": "string"
-              },
-              {
-                "Name": "chosen_cert_arn",
-                "Type": "string"
-              },
-              {
-                "Name": "matched_rule_priority",
-                "Type": "string"
-              },
-              {
-                "Name": "request_creation_time",
-                "Type": "string"
-              },
-              {
-                "Name": "actions_executed",
-                "Type": "string"
-              },
-              {
-                "Name": "redirect_url",
-                "Type": "string"
-              },
-              {
-                "Name": "lambda_error_reason",
-                "Type": "string"
-              },
-              {
-                "Name": "new_field",
-                "Type": "string"
-              }
-            ],
-            "Compressed": true,
-            "InputFormat": "org.apache.hadoop.mapred.TextInputFormat",
-            "Location": {
-              "Fn::Sub": [
-                "s3://${AppAccessLogBucket}/AWSLogs-Partitioned/",
-                {
-                  "AppAccessLogBucket": {
-                    "Ref": "AppAccessLogBucket"
-                  }
-                }
-              ]
-            },
-            "OutputFormat": "org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat",
-            "SerdeInfo": {
-              "Parameters": {
-                "serialization.format": "1",
-                "input.regex": "([^ ]*) ([^ ]*) ([^ ]*) ([^ ]*):([0-9]*) ([^ ]*)[:-]([0-9]*) ([-.0-9]*) ([-.0-9]*) ([-.0-9]*) (|[-0-9]*) (-|[-0-9]*) ([-0-9]*) ([-0-9]*) \\\"([^ ]*) (.*) (- |[^ ]*)\\\" \\\"([^\\\"]*)\\\" ([A-Z0-9-_]+) ([A-Za-z0-9.-]*) ([^ ]*) \\\"([^\\\"]*)\\\" \\\"([^\\\"]*)\\\" \\\"([^\\\"]*)\\\" ([-.0-9]*) ([^ ]*) \\\"([^\\\"]*)\\\" \\\"([^\\\"]*)\\\" \\\"([^ ]*)\\\" \\\"([^\\\\s]+?)\\\" \\\"([^\\\\s]+)\\\" \\\"([^ ]*)\\\" \\\"([^ ]*)\\\" ?([^ ]*)?"
-              },
-              "SerializationLibrary": "org.apache.hadoop.hive.serde2.RegexSerDe"
-            },
-            "StoredAsSubDirectories": false
-          },
-          "TableType": "EXTERNAL_TABLE"
-        }
+      {
+       "Name": "day",
+       "Type": "int"
       },
-      "Condition": "ALBScannersProbesAthenaLogParser"
-    },
-    "CloudFrontGlueAppAccessLogsTable": {
-      "Type": "AWS::Glue::Table",
-      "Properties": {
-        "CatalogId": {
-          "Ref": "AWS::AccountId"
-        },
-        "DatabaseName": {
-          "Ref": "GlueAccessLogsDatabase"
-        },
-        "TableInput": {
-          "Description": {
-            "Fn::Sub": "${ParentStackName} - APP Access Logs"
-          },
-          "Name": "app_access_logs",
-          "Parameters": {
-            "skip.header.line.count": "2",
-            "EXTERNAL": "TRUE"
-          },
-          "PartitionKeys": [
-            {
-              "Name": "year",
-              "Type": "int"
-            },
-            {
-              "Name": "month",
-              "Type": "int"
-            },
-            {
-              "Name": "day",
-              "Type": "int"
-            },
-            {
-              "Name": "hour",
-              "Type": "int"
-            }
-          ],
-          "StorageDescriptor": {
-            "Columns": [
-              {
-                "Name": "date",
-                "Type": "date"
-              },
-              {
-                "Name": "time",
-                "Type": "string"
-              },
-              {
-                "Name": "location",
-                "Type": "string"
-              },
-              {
-                "Name": "bytes",
-                "Type": "bigint"
-              },
-              {
-                "Name": "requestip",
-                "Type": "string"
-              },
-              {
-                "Name": "method",
-                "Type": "string"
-              },
-              {
-                "Name": "host",
-                "Type": "string"
-              },
-              {
-                "Name": "uri",
-                "Type": "string"
-              },
-              {
-                "Name": "status",
-                "Type": "int"
-              },
-              {
-                "Name": "referrer",
-                "Type": "string"
-              },
-              {
-                "Name": "useragent",
-                "Type": "string"
-              },
-              {
-                "Name": "querystring",
-                "Type": "string"
-              },
-              {
-                "Name": "cookie",
-                "Type": "string"
-              },
-              {
-                "Name": "resulttype",
-                "Type": "string"
-              },
-              {
-                "Name": "requestid",
-                "Type": "string"
-              },
-              {
-                "Name": "hostheader",
-                "Type": "string"
-              },
-              {
-                "Name": "requestprotocol",
-                "Type": "string"
-              },
-              {
-                "Name": "requestbytes",
-                "Type": "bigint"
-              },
-              {
-                "Name": "timetaken",
-                "Type": "float"
-              },
-              {
-                "Name": "xforwardedfor",
-                "Type": "string"
-              },
-              {
-                "Name": "sslprotocol",
-                "Type": "string"
-              },
-              {
-                "Name": "sslcipher",
-                "Type": "string"
-              },
-              {
-                "Name": "responseresulttype",
-                "Type": "string"
-              },
-              {
-                "Name": "httpversion",
-                "Type": "string"
-              },
-              {
-                "Name": "filestatus",
-                "Type": "string"
-              },
-              {
-                "Name": "encryptedfields",
-                "Type": "int"
-              }
-            ],
-            "Compressed": true,
-            "InputFormat": "org.apache.hadoop.mapred.TextInputFormat",
-            "Location": {
-              "Fn::Sub": [
-                "s3://${AppAccessLogBucket}/AWSLogs-Partitioned/",
-                {
-                  "AppAccessLogBucket": {
-                    "Ref": "AppAccessLogBucket"
-                  }
-                }
-              ]
-            },
-            "OutputFormat": "org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat",
-            "SerdeInfo": {
-              "Parameters": {
-                "field.delim": "\t",
-                "serialization.format": "\t"
-              },
-              "SerializationLibrary": "org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe"
-            },
-            "StoredAsSubDirectories": true
-          },
-          "TableType": "EXTERNAL_TABLE"
+      {
+       "Name": "hour",
+       "Type": "int"
+      }
+     ],
+     "StorageDescriptor": {
+      "Columns": [
+       {
+        "Name": "type",
+        "Type": "string"
+       },
+       {
+        "Name": "time",
+        "Type": "string"
+       },
+       {
+        "Name": "elb",
+        "Type": "string"
+       },
+       {
+        "Name": "client_ip",
+        "Type": "string"
+       },
+       {
+        "Name": "client_port",
+        "Type": "int"
+       },
+       {
+        "Name": "target_ip",
+        "Type": "string"
+       },
+       {
+        "Name": "target_port",
+        "Type": "int"
+       },
+       {
+        "Name": "request_processing_time",
+        "Type": "double"
+       },
+       {
+        "Name": "target_processing_time",
+        "Type": "double"
+       },
+       {
+        "Name": "response_processing_time",
+        "Type": "double"
+       },
+       {
+        "Name": "elb_status_code",
+        "Type": "string"
+       },
+       {
+        "Name": "target_status_code",
+        "Type": "string"
+       },
+       {
+        "Name": "received_bytes",
+        "Type": "bigint"
+       },
+       {
+        "Name": "sent_bytes",
+        "Type": "bigint"
+       },
+       {
+        "Name": "request_verb",
+        "Type": "string"
+       },
+       {
+        "Name": "request_url",
+        "Type": "string"
+       },
+       {
+        "Name": "request_proto",
+        "Type": "string"
+       },
+       {
+        "Name": "user_agent",
+        "Type": "string"
+       },
+       {
+        "Name": "ssl_cipher",
+        "Type": "string"
+       },
+       {
+        "Name": "ssl_protocol",
+        "Type": "string"
+       },
+       {
+        "Name": "target_group_arn",
+        "Type": "string"
+       },
+       {
+        "Name": "trace_id",
+        "Type": "string"
+       },
+       {
+        "Name": "domain_name",
+        "Type": "string"
+       },
+       {
+        "Name": "chosen_cert_arn",
+        "Type": "string"
+       },
+       {
+        "Name": "matched_rule_priority",
+        "Type": "string"
+       },
+       {
+        "Name": "request_creation_time",
+        "Type": "string"
+       },
+       {
+        "Name": "actions_executed",
+        "Type": "string"
+       },
+       {
+        "Name": "redirect_url",
+        "Type": "string"
+       },
+       {
+        "Name": "lambda_error_reason",
+        "Type": "string"
+       },
+       {
+        "Name": "new_field",
+        "Type": "string"
+       }
+      ],
+      "Compressed": true,
+      "InputFormat": "org.apache.hadoop.mapred.TextInputFormat",
+      "Location": {
+       "Fn::Sub": [
+        "s3://${AppAccessLogBucket}/AWSLogs-Partitioned/",
+        {
+         "AppAccessLogBucket": {
+          "Ref": "AppAccessLogBucket"
+         }
         }
+       ]
       },
-      "Condition": "CloudFrontScannersProbesAthenaLogParser"
-    },
-    "WAFAddPartitionAthenaQueryWorkGroup": {
-      "Type": "AWS::Athena::WorkGroup",
-      "Properties": {
-        "Description": "Athena WorkGroup for adding Athena partition queries used by Security Automations for AWS WAF Solution",
-        "Name": {
-          "Fn::Join": [
-            "-",
-            [
-              "WAFAddPartitionAthenaQueryWorkGroup",
-              {
-                "Ref": "UUID"
-              }
-            ]
-          ]
-        },
-        "RecursiveDeleteOption": true,
-        "State": "ENABLED",
-        "WorkGroupConfiguration": {
-          "PublishCloudWatchMetricsEnabled": true,
-          "ResultConfiguration": {
-            "EncryptionConfiguration": {
-              "EncryptionOption": "SSE_S3"
-            }
-          }
-        }
+      "OutputFormat": "org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat",
+      "SerdeInfo": {
+       "Parameters": {
+        "serialization.format": "1",
+        "input.regex": "([^ ]*) ([^ ]*) ([^ ]*) ([^ ]*):([0-9]*) ([^ ]*)[:-]([0-9]*) ([-.0-9]*) ([-.0-9]*) ([-.0-9]*) (|[-0-9]*) (-|[-0-9]*) ([-0-9]*) ([-0-9]*) \\\"([^ ]*) (.*) (- |[^ ]*)\\\" \\\"([^\\\"]*)\\\" ([A-Z0-9-_]+) ([A-Za-z0-9.-]*) ([^ ]*) \\\"([^\\\"]*)\\\" \\\"([^\\\"]*)\\\" \\\"([^\\\"]*)\\\" ([-.0-9]*) ([^ ]*) \\\"([^\\\"]*)\\\" \\\"([^\\\"]*)\\\" \\\"([^ ]*)\\\" \\\"([^\\\\s]+?)\\\" \\\"([^\\\\s]+)\\\" \\\"([^ ]*)\\\" \\\"([^ ]*)\\\" ?([^ ]*)?"
+       },
+       "SerializationLibrary": "org.apache.hadoop.hive.serde2.RegexSerDe"
       },
-      "Condition": "AthenaLogParser"
-    },
-    "WAFLogAthenaQueryWorkGroup": {
-      "Type": "AWS::Athena::WorkGroup",
-      "Properties": {
-        "Description": "Athena WorkGroup for WAF log queries used by Security Automations for AWS WAF Solution",
-        "Name": {
-          "Fn::Join": [
-            "-",
-            [
-              "WAFLogAthenaQueryWorkGroup",
-              {
-                "Ref": "UUID"
-              }
-            ]
-          ]
-        },
-        "RecursiveDeleteOption": true,
-        "State": "ENABLED",
-        "WorkGroupConfiguration": {
-          "PublishCloudWatchMetricsEnabled": true,
-          "ResultConfiguration": {
-            "EncryptionConfiguration": {
-              "EncryptionOption": "SSE_S3"
-            }
-          }
-        }
-      },
-      "Condition": "HttpFloodAthenaLogParser"
-    },
-    "WAFAppAccessLogAthenaQueryWorkGroup": {
-      "Type": "AWS::Athena::WorkGroup",
-      "Properties": {
-        "Description": "Athena WorkGroup for CloudFront or ALB application access log queries used by Security Automations for AWS WAF Solution",
-        "Name": {
-          "Fn::Join": [
-            "-",
-            [
-              "WAFAppAccessLogAthenaQueryWorkGroup",
-              {
-                "Ref": "UUID"
-              }
-            ]
-          ]
-        },
-        "RecursiveDeleteOption": true,
-        "State": "ENABLED",
-        "WorkGroupConfiguration": {
-          "PublishCloudWatchMetricsEnabled": true,
-          "ResultConfiguration": {
-            "EncryptionConfiguration": {
-              "EncryptionOption": "SSE_S3"
-            }
-          }
-        }
-      },
-      "Condition": "ScannersProbesAthenaLogParser"
+      "StoredAsSubDirectories": false
+     },
+     "TableType": "EXTERNAL_TABLE"
     }
+   },
+   "Condition": "ALBScannersProbesAthenaLogParser"
   },
-  "Outputs": {
-    "FirehoseWAFLogsDeliveryStreamArn": {
-      "Value": {
-        "Fn::GetAtt": [
-          "FirehoseWAFLogsDeliveryStream",
-          "Arn"
-        ]
-      },
-      "Condition": "HttpFloodProtectionLogParserActivated"
+  "CloudFrontGlueAppAccessLogsTable": {
+   "Type": "AWS::Glue::Table",
+   "Properties": {
+    "CatalogId": {
+     "Ref": "AWS::AccountId"
     },
-    "WAFLogAthenaQueryWorkGroup": {
-      "Description": "Athena WorkGroup for WAF log queries used by Security Automations for AWS WAF Solution",
-      "Value": {
-        "Ref": "WAFLogAthenaQueryWorkGroup"
-      },
-      "Condition": "HttpFloodAthenaLogParser"
+    "DatabaseName": {
+     "Ref": "GlueAccessLogsDatabase"
     },
-    "WAFAppAccessLogAthenaQueryWorkGroup": {
-      "Description": "Athena WorkGroup for CloudFront or ALB application access log queries used by Security Automations for AWS WAF Solution",
-      "Value": {
-        "Ref": "WAFAppAccessLogAthenaQueryWorkGroup"
+    "TableInput": {
+     "Description": {
+      "Fn::Sub": "${ParentStackName} - APP Access Logs"
+     },
+     "Name": "app_access_logs",
+     "Parameters": {
+      "skip.header.line.count": "2",
+      "EXTERNAL": "TRUE"
+     },
+     "PartitionKeys": [
+      {
+       "Name": "year",
+       "Type": "int"
       },
-      "Condition": "ScannersProbesAthenaLogParser"
-    },
-    "Version": {
-      "Value": "v4.2.0"
-    },
-    "GlueWafAccessLogsTable": {
-      "Value": {
-        "Ref": "GlueWafAccessLogsTable"
+      {
+       "Name": "month",
+       "Type": "int"
       },
-      "Condition": "HttpFloodAthenaLogParser"
-    },
-    "GlueAppAccessLogsTable": {
-      "Value": {
-        "Fn::If": [
-          "AlbEndpoint",
-          {
-            "Ref": "ALBGlueAppAccessLogsTable"
-          },
-          {
-            "Ref": "CloudFrontGlueAppAccessLogsTable"
-          }
-        ]
+      {
+       "Name": "day",
+       "Type": "int"
       },
-      "Condition": "ScannersProbesAthenaLogParser"
-    },
-    "GlueAccessLogsDatabase": {
-      "Value": {
-        "Ref": "GlueAccessLogsDatabase"
+      {
+       "Name": "hour",
+       "Type": "int"
+      }
+     ],
+     "StorageDescriptor": {
+      "Columns": [
+       {
+        "Name": "date",
+        "Type": "date"
+       },
+       {
+        "Name": "time",
+        "Type": "string"
+       },
+       {
+        "Name": "location",
+        "Type": "string"
+       },
+       {
+        "Name": "bytes",
+        "Type": "bigint"
+       },
+       {
+        "Name": "requestip",
+        "Type": "string"
+       },
+       {
+        "Name": "method",
+        "Type": "string"
+       },
+       {
+        "Name": "host",
+        "Type": "string"
+       },
+       {
+        "Name": "uri",
+        "Type": "string"
+       },
+       {
+        "Name": "status",
+        "Type": "int"
+       },
+       {
+        "Name": "referrer",
+        "Type": "string"
+       },
+       {
+        "Name": "useragent",
+        "Type": "string"
+       },
+       {
+        "Name": "querystring",
+        "Type": "string"
+       },
+       {
+        "Name": "cookie",
+        "Type": "string"
+       },
+       {
+        "Name": "resulttype",
+        "Type": "string"
+       },
+       {
+        "Name": "requestid",
+        "Type": "string"
+       },
+       {
+        "Name": "hostheader",
+        "Type": "string"
+       },
+       {
+        "Name": "requestprotocol",
+        "Type": "string"
+       },
+       {
+        "Name": "requestbytes",
+        "Type": "bigint"
+       },
+       {
+        "Name": "timetaken",
+        "Type": "float"
+       },
+       {
+        "Name": "xforwardedfor",
+        "Type": "string"
+       },
+       {
+        "Name": "sslprotocol",
+        "Type": "string"
+       },
+       {
+        "Name": "sslcipher",
+        "Type": "string"
+       },
+       {
+        "Name": "responseresulttype",
+        "Type": "string"
+       },
+       {
+        "Name": "httpversion",
+        "Type": "string"
+       },
+       {
+        "Name": "filestatus",
+        "Type": "string"
+       },
+       {
+        "Name": "encryptedfields",
+        "Type": "int"
+       }
+      ],
+      "Compressed": true,
+      "InputFormat": "org.apache.hadoop.mapred.TextInputFormat",
+      "Location": {
+       "Fn::Sub": [
+        "s3://${AppAccessLogBucket}/AWSLogs-Partitioned/",
+        {
+         "AppAccessLogBucket": {
+          "Ref": "AppAccessLogBucket"
+         }
+        }
+       ]
       },
-      "Condition": "AthenaLogParser"
-    },
-    "WAFAddPartitionAthenaQueryWorkGroup": {
-      "Description": "Athena WorkGroup for adding Athena partition queries used by Security Automations for AWS WAF Solution",
-      "Value": {
-        "Ref": "WAFAddPartitionAthenaQueryWorkGroup"
+      "OutputFormat": "org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat",
+      "SerdeInfo": {
+       "Parameters": {
+        "field.delim": "\t",
+        "serialization.format": "\t"
+       },
+       "SerializationLibrary": "org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe"
       },
-      "Condition": "AthenaLogParser"
+      "StoredAsSubDirectories": true
+     },
+     "TableType": "EXTERNAL_TABLE"
     }
+   },
+   "Condition": "CloudFrontScannersProbesAthenaLogParser"
+  },
+  "WAFAddPartitionAthenaQueryWorkGroup": {
+   "Type": "AWS::Athena::WorkGroup",
+   "Properties": {
+    "Description": "Athena WorkGroup for adding Athena partition queries used by Security Automations for AWS WAF Solution",
+    "Name": {
+     "Fn::Join": [
+      "-",
+      [
+       "WAFAddPartitionAthenaQueryWorkGroup",
+       {
+        "Ref": "UUID"
+       }
+      ]
+     ]
+    },
+    "RecursiveDeleteOption": true,
+    "State": "ENABLED",
+    "WorkGroupConfiguration": {
+     "PublishCloudWatchMetricsEnabled": true,
+     "ResultConfiguration": {
+      "EncryptionConfiguration": {
+       "EncryptionOption": "SSE_S3"
+      }
+     }
+    }
+   },
+   "Condition": "AthenaLogParser"
+  },
+  "WAFLogAthenaQueryWorkGroup": {
+   "Type": "AWS::Athena::WorkGroup",
+   "Properties": {
+    "Description": "Athena WorkGroup for WAF log queries used by Security Automations for AWS WAF Solution",
+    "Name": {
+     "Fn::Join": [
+      "-",
+      [
+       "WAFLogAthenaQueryWorkGroup",
+       {
+        "Ref": "UUID"
+       }
+      ]
+     ]
+    },
+    "RecursiveDeleteOption": true,
+    "State": "ENABLED",
+    "WorkGroupConfiguration": {
+     "PublishCloudWatchMetricsEnabled": true,
+     "ResultConfiguration": {
+      "EncryptionConfiguration": {
+       "EncryptionOption": "SSE_S3"
+      }
+     }
+    }
+   },
+   "Condition": "HttpFloodAthenaLogParser"
+  },
+  "WAFAppAccessLogAthenaQueryWorkGroup": {
+   "Type": "AWS::Athena::WorkGroup",
+   "Properties": {
+    "Description": "Athena WorkGroup for CloudFront or ALB application access log queries used by Security Automations for AWS WAF Solution",
+    "Name": {
+     "Fn::Join": [
+      "-",
+      [
+       "WAFAppAccessLogAthenaQueryWorkGroup",
+       {
+        "Ref": "UUID"
+       }
+      ]
+     ]
+    },
+    "RecursiveDeleteOption": true,
+    "State": "ENABLED",
+    "WorkGroupConfiguration": {
+     "PublishCloudWatchMetricsEnabled": true,
+     "ResultConfiguration": {
+      "EncryptionConfiguration": {
+       "EncryptionOption": "SSE_S3"
+      }
+     }
+    }
+   },
+   "Condition": "ScannersProbesAthenaLogParser"
   }
+ },
+ "Outputs": {
+  "FirehoseWAFLogsDeliveryStreamArn": {
+   "Value": {
+    "Fn::GetAtt": [
+     "FirehoseWAFLogsDeliveryStream",
+     "Arn"
+    ]
+   },
+   "Condition": "HttpFloodProtectionLogParserActivated"
+  },
+  "WAFLogAthenaQueryWorkGroup": {
+   "Description": "Athena WorkGroup for WAF log queries used by Security Automations for AWS WAF Solution",
+   "Value": {
+    "Ref": "WAFLogAthenaQueryWorkGroup"
+   },
+   "Condition": "HttpFloodAthenaLogParser"
+  },
+  "WAFAppAccessLogAthenaQueryWorkGroup": {
+   "Description": "Athena WorkGroup for CloudFront or ALB application access log queries used by Security Automations for AWS WAF Solution",
+   "Value": {
+    "Ref": "WAFAppAccessLogAthenaQueryWorkGroup"
+   },
+   "Condition": "ScannersProbesAthenaLogParser"
+  },
+  "Version": {
+   "Value": "v4.2.0"
+  },
+  "GlueWafAccessLogsTable": {
+   "Value": {
+    "Ref": "GlueWafAccessLogsTable"
+   },
+   "Condition": "HttpFloodAthenaLogParser"
+  },
+  "GlueAppAccessLogsTable": {
+   "Value": {
+    "Fn::If": [
+     "AlbEndpoint",
+     {
+      "Ref": "ALBGlueAppAccessLogsTable"
+     },
+     {
+      "Ref": "CloudFrontGlueAppAccessLogsTable"
+     }
+    ]
+   },
+   "Condition": "ScannersProbesAthenaLogParser"
+  },
+  "GlueAccessLogsDatabase": {
+   "Value": {
+    "Ref": "GlueAccessLogsDatabase"
+   },
+   "Condition": "AthenaLogParser"
+  },
+  "WAFAddPartitionAthenaQueryWorkGroup": {
+   "Description": "Athena WorkGroup for adding Athena partition queries used by Security Automations for AWS WAF Solution",
+   "Value": {
+    "Ref": "WAFAddPartitionAthenaQueryWorkGroup"
+   },
+   "Condition": "AthenaLogParser"
+  }
+ }
 }
