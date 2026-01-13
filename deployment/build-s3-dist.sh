@@ -93,8 +93,8 @@ echo "--------------------------------------------------------------------------
 # Install the global aws-cdk package
 echo "cd $resource_dir"
 cd $resource_dir
-echo "npm ci"
-npm ci
+echo "yarn clean && yarn install"
+yarn clean && yarn install
 
 echo " ./node_modules/aws-cdk/bin/cdk synth  --asset-metadata false --path-metadata false --version-reporting false --quiet"
 ./node_modules/aws-cdk/bin/cdk synth --asset-metadata false --path-metadata false --version-reporting false --quiet

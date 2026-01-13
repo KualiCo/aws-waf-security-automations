@@ -89,15 +89,15 @@ echo "--------------------------------------------------------------------------
 echo "[Lint] Code Style and Lint"
 echo "------------------------------------------------------------------------------"
 cd $source_dir/infrastructure
-npm run pretest
-npm run prettier
-npm run lint
+yarn pretest
+yarn prettier
+yarn lint
 
 echo "------------------------------------------------------------------------------"
 echo "[Test] CDK Unit Tests"
 echo "------------------------------------------------------------------------------"
 cd $source_dir/infrastructure
-npm run test
+yarn test
 exit_status=$?
 if [ $exit_status -ne "0" ]; then
     echo "CDK tests failed. Exiting with status code 1."

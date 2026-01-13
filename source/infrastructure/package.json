@@ -8,12 +8,14 @@
     "build": "tsc",
     "watch": "tsc -w",
     "test": "jest --coverage",
-    "pretest": "npm ci",
+    "pretest": "yarn clean && yarn install",
     "cdk": "cdk",
     "clean": "rm -rf node_modules",
-    "lint": "npx eslint lib",
+    "lint": "npx eslint 'lib/**'",
     "prettier": "npx prettier --check 'lib/**/*.ts'",
-    "prettierFix": "npx prettier --write 'lib/**/*.ts'"
+    "prettierFix": "npx prettier --write 'lib/**/*.ts'",
+    "deploy-uw2-tst": "cdk deploy AwsWafSecurityAutomations --parameters AppAccessLogBucket=ops-proxy-net-uw2-tst-far-albaccesslogginge1d340e2-0dgphnbunnnv --parameters ActionForHttpFloodProtectionParam=count --parameters ActionForBadBotProtectionParam=count --parameters ActionForReputationListsProtectionParam=count --parameters ActionForSqlInjectionProtectionParam=count --parameters ActionForCrossSiteScriptingProtectionParam=count --parameters ActionForScannersProbesProtectionParam=count",
+    "diff-uw2-tst": "cdk diff AwsWafSecurityAutomations --previous-parameters"
   },
   "devDependencies": {
     "@eslint/js": "^8.57.1",
@@ -33,7 +35,8 @@
   },
   "dependencies": {
     "aws-cdk-lib": "2.248.0",
-    "constructs": "^10.4.2"
+    "constructs": "^10.4.2",
+    "@kuali/kuali-cdk": "3.22.0"
   },
   "overrides": {
     "minimatch@3.x": "3.1.5"
