@@ -15,8 +15,8 @@
     "lint": "npx eslint 'lib/**'",
     "prettier": "npx prettier --check 'lib/**/*.ts'",
     "prettierFix": "npx prettier --write 'lib/**/*.ts'",
-    "deploy-uw2-tst": "cdk deploy AwsWafSecurityAutomations --parameters AppAccessLogBucket=ops-proxy-net-uw2-tst-far-albaccesslogginge1d340e2-0dgphnbunnnv --parameters ActionForHttpFloodProtectionParam=count --parameters ActionForBadBotProtectionParam=count --parameters ActionForReputationListsProtectionParam=count --parameters ActionForSqlInjectionProtectionParam=count --parameters ActionForCrossSiteScriptingProtectionParam=count --parameters ActionForScannersProbesProtectionParam=count",
-    "diff-uw2-tst": "cdk diff AwsWafSecurityAutomations --previous-parameters"
+    "deploy-us-west-2-security-automations-for-aws-waf-tst": "cdk deploy AwsWafSecurityAutomations --parameters AppAccessLogBucket=ops-proxy-net-uw2-tst-far-albaccesslogginge1d340e2-0dgphnbunnnv --parameters ActionForHttpFloodProtectionParam=count --parameters ActionForBadBotProtectionParam=count --parameters ActionForReputationListsProtectionParam=count --parameters ActionForSqlInjectionProtectionParam=count --parameters ActionForCrossSiteScriptingProtectionParam=count --parameters ActionForScannersProbesProtectionParam=count",
+    "diff-us-west-2-security-automations-for-aws-waf-tst": "cdk diff AwsWafSecurityAutomations --previous-parameters"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.2",
