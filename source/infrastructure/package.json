@@ -15,8 +15,10 @@
     "lint": "npx eslint 'lib/**'",
     "prettier": "npx prettier --check 'lib/**/*.ts'",
     "prettierFix": "npx prettier --write 'lib/**/*.ts'",
-    "deploy-us-west-2-security-automations-for-aws-waf-tst": "cdk deploy AwsWafSecurityAutomations --parameters AppAccessLogBucket=ops-proxy-net-uw2-tst-far-albaccesslogginge1d340e2-0dgphnbunnnv --parameters ActionForHttpFloodProtectionParam=count --parameters ActionForBadBotProtectionParam=count --parameters ActionForReputationListsProtectionParam=count --parameters ActionForSqlInjectionProtectionParam=count --parameters ActionForCrossSiteScriptingProtectionParam=count --parameters ActionForScannersProbesProtectionParam=count",
-    "diff-us-west-2-security-automations-for-aws-waf-tst": "cdk diff AwsWafSecurityAutomations --previous-parameters"
+    "deploy-us-west-2-security-automations-for-aws-waf-tst": "cdk deploy ops-waf-net-uw2-tst-waf --parameters AppAccessLogBucket=ops-proxy-net-uw2-tst-far-albaccesslogginge1d340e2-wbn79wt3otou --parameters ActionForHttpFloodProtectionParam=count --parameters ActionForBadBotProtectionParam=count --parameters ActionForReputationListsProtectionParam=count --parameters ActionForSqlInjectionProtectionParam=count --parameters ActionForCrossSiteScriptingProtectionParam=count --parameters ActionForScannersProbesProtectionParam=count",
+    "diff-us-west-2-security-automations-for-aws-waf-tst": "cdk diff ops-waf-net-uw2-tst-waf --previous-parameters",
+    "deploy-us-west-2-security-automations-for-aws-waf-prd": "cdk deploy ops-waf-net-uw2-prd-waf --parameters AppAccessLogBucket=ops-proxy-net-uw2-prd-far-albaccesslogginge1d340e2-b7gookhbt5gp --parameters ActionForHttpFloodProtectionParam=count --parameters ActionForBadBotProtectionParam=count --parameters ActionForReputationListsProtectionParam=count --parameters ActionForSqlInjectionProtectionParam=count --parameters ActionForCrossSiteScriptingProtectionParam=count --parameters ActionForScannersProbesProtectionParam=count",
+    "diff-us-west-2-security-automations-for-aws-waf-prd": "cdk diff ops-waf-net-uw2-prd-waf --previous-parameters"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.2",

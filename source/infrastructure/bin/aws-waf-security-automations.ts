@@ -7,9 +7,20 @@ import { CfnGuardSuppressResourceList } from "../lib/utils/appUtils";
 
 const app = new App();
 
-const stack = new AwsWafSecurityAutomationsStack(
+const tstStack = new AwsWafSecurityAutomationsStack(
   app,
-  AwsWafSecurityAutomationsStack.ID,
+  'ops-waf-net-uw2-tst-waf',
+  {
+    analyticsReporting: false, // CDK::Metadata breaks deployment in some regions
+    synthesizer: new DefaultStackSynthesizer({
+      generateBootstrapVersionRule: false, // We don't need an extra CFN parameter for the Bootstrap version
+    }),
+  },
+);
+
+const prdStack = new AwsWafSecurityAutomationsStack(
+  app,
+  'ops-waf-net-uw2-prd-waf',
   {
     analyticsReporting: false, // CDK::Metadata breaks deployment in some regions
     synthesizer: new DefaultStackSynthesizer({
@@ -27,4 +38,5 @@ const resourceSuppressions = {
   ],
 };
 
-Aspects.of(stack).add(new CfnGuardSuppressResourceList(resourceSuppressions));
+Aspects.of(tstStack).add(new CfnGuardSuppressResourceList(resourceSuppressions));
+Aspects.of(prdStack).add(new CfnGuardSuppressResourceList(resourceSuppressions));
