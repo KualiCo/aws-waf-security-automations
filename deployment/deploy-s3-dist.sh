@@ -1,9 +1,9 @@
-#!/bin/bash
+#!/usr/bin/env bash
+# Copyright 2005-2025 Kuali, Inc.  All rights reserved.
+# Modified in accordance with the license.
 #
 # Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 # SPDX-License-Identifier: Apache-2.0
-# Modified in accordance with the license to deploy assets to S3.
-# Copyright 2005-2025 Kuali, Inc.  All rights reserved.
 
 # This assumes all of the OS-level configuration has been completed and git repo has already been cloned
 # 

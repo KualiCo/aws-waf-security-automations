@@ -1,4 +1,6 @@
-#!/bin/bash
+#!/usr/bin/env bash
+# Copyright 2005-2025 Kuali, Inc.  All rights reserved.
+# Modified in accordance with the license.
 #
 # This assumes all of the OS-level configuration has been completed and git repo has already been cloned
 #
@@ -101,7 +103,8 @@ yarn test
 exit_status=$?
 if [ $exit_status -ne "0" ]; then
     echo "CDK tests failed. Exiting with status code 1."
+    echo "NOTE: 'yarn test-update' can be used to update old templates."
     exit 1
   else
-     echo "Unit Tests Successful"
+    echo "Unit Tests Successful"
 fi

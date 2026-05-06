@@ -161,7 +161,7 @@ chmod +x ./deploy-s3-dist.sh && ./deploy-s3-dist.sh $Env:TEMPLATE_OUTPUT_BUCKET 
 
 ```bash
 cd <rootDir>/deployment
-chmod +x ./deploy-cdk.sh && ./build-cdk.sh $TEMPLATE_OUTPUT_BUCKET $DIST_OUTPUT_BUCKET $SOLUTION_NAME $VERSION
+chmod +x ./deploy-cdk.sh && ./deploy-cdk.sh $TEMPLATE_OUTPUT_BUCKET $DIST_OUTPUT_BUCKET $SOLUTION_NAME $VERSION
 ```
 
 ```powershell

@@ -1,3 +1,4 @@
+#!/usr/bin/env pwsh
 # Copyright 2005-2025 Kuali, Inc.  All rights reserved.
 
 param(

@@ -1,9 +1,9 @@
-#!/bin/bash
+#!/usr/bin/env bash
+# Copyright 2005-2025 Kuali, Inc.  All rights reserved.
+# Modified in accordance with the license.
 #
 # Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 # SPDX-License-Identifier: Apache-2.0
-# Modified in accordance with the license to deploy the cdk app.
-# Copyright 2005-2025 Kuali, Inc.  All rights reserved.
 
 # This assumes all of the OS-level configuration has been completed and git repo has already been cloned
 # 
@@ -52,10 +52,6 @@ export TEMPLATE_OUTPUT_BUCKET=$1
 export DIST_OUTPUT_BUCKET=$2
 export SOLUTION_NAME=$3
 export VERSION=$4
-
-if [[ -z "$SOLUTION_NAME" ]]; then
-    export SOLUTION_NAME='security-automations-for-aws-waf'
-fi
 
 echo "------------------------------------------------------------------------------"
 echo "[Deploy] Run cdk deploy"
