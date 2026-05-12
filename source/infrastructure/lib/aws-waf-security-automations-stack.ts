@@ -89,6 +89,23 @@ export class AwsWafSecurityAutomationsStack extends Stack {
         },
       ),
 
+      actionForAWSManagedRules: new CfnParameter(
+        this,
+        "ActionForAWSManagedRulesParam",
+        {
+          type: "String",
+          default: "block",
+          allowedValues: ["block", "count"],
+          description: [
+            "If you chose yes for the Activate AWS Managed Rules parameter,",
+            "choose block to have AWS WAF block requests that match the rules",
+            "or choose count to have AWS WAF count requests that match the rules",
+            "instead of blocking them. If you chose to deactivate this",
+            "protection, ignore this parameter.",
+          ].join(" "),
+        },
+      ),
+
       activateAWSManagedAP: new CfnParameter(
         this,
         "ActivateAWSManagedAPParam",
@@ -100,6 +117,23 @@ export class AwsWafSecurityAutomationsStack extends Stack {
             "The Admin protection rule group blocks external access to exposed administrative pages.",
             "This might be useful if you run third-party software or want to reduce the risk of a",
             "malicious actor gaining administrative access to your application. Required WCU: 100.",
+          ].join(" "),
+        },
+      ),
+
+      actionForAWSManagedAP: new CfnParameter(
+        this,
+        "ActionForAWSManagedAPParam",
+        {
+          type: "String",
+          default: "block",
+          allowedValues: ["block", "count"],
+          description: [
+            "If you chose yes for the Activate AWS Managed Admin Protection parameter,",
+            "choose block to have AWS WAF block requests that match the rules",
+            "or choose count to have AWS WAF count requests that match the rules",
+            "instead of blocking them. If you chose to deactivate this",
+            "protection, ignore this parameter.",
           ].join(" "),
         },
       ),
@@ -119,6 +153,23 @@ export class AwsWafSecurityAutomationsStack extends Stack {
         },
       ),
 
+      actionForAWSManagedKBI: new CfnParameter(
+        this,
+        "ActionForAWSManagedKBIParam",
+        {
+          type: "String",
+          default: "block",
+          allowedValues: ["block", "count"],
+          description: [
+            "If you chose yes for the Activate AWS Managed Known Bad Inputs parameter,",
+            "choose block to have AWS WAF block requests that match the rules",
+            "or choose count to have AWS WAF count requests that match the rules",
+            "instead of blocking them. If you chose to deactivate this",
+            "protection, ignore this parameter.",
+          ].join(" "),
+        },
+      ),
+
       activateAWSManagedIPR: new CfnParameter(
         this,
         "ActivateAWSManagedIPRParam",
@@ -131,6 +182,23 @@ export class AwsWafSecurityAutomationsStack extends Stack {
             "This is useful if you would like to block IP addresses typically associated with bots or",
             "other threats. Blocking these IP addresses can help mitigate bots and reduce the risk of",
             "a malicious actor discovering a vulnerable application. Required WCU: 25.",
+          ].join(" "),
+        },
+      ),
+
+      actionForAWSManagedIPR: new CfnParameter(
+        this,
+        "ActionForAWSManagedIPRParam",
+        {
+          type: "String",
+          default: "block",
+          allowedValues: ["block", "count"],
+          description: [
+            "If you chose yes for the Activate AWS Managed IP Reputation parameter,",
+            "choose block to have AWS WAF block requests that match the rules",
+            "or choose count to have AWS WAF count requests that match the rules",
+            "instead of blocking them. If you chose to deactivate this",
+            "protection, ignore this parameter.",
           ].join(" "),
         },
       ),
@@ -152,6 +220,23 @@ export class AwsWafSecurityAutomationsStack extends Stack {
         },
       ),
 
+      actionForAWSManagedAIP: new CfnParameter(
+        this,
+        "ActionForAWSManagedAIPParam",
+        {
+          type: "String",
+          default: "block",
+          allowedValues: ["block", "count"],
+          description: [
+            "If you chose yes for the Activate AWS Managed Anonymous IP parameter,",
+            "choose block to have AWS WAF block requests that match the rules",
+            "or choose count to have AWS WAF count requests that match the rules",
+            "instead of blocking them. If you chose to deactivate this",
+            "protection, ignore this parameter.",
+          ].join(" "),
+        },
+      ),
+
       activateAWSManagedSQL: new CfnParameter(
         this,
         "ActivateAWSManagedSQLParam",
@@ -164,6 +249,23 @@ export class AwsWafSecurityAutomationsStack extends Stack {
             "like SQL injection attacks. This can help prevent remote injection of unauthorized queries. Evaluate",
             "this rule group for use if your application interfaces with an SQL database. Using the SQL injection",
             "custom rule is optional, if you already have AWS managed SQL rule group activated. Required WCU: 200.",
+          ].join(" "),
+        },
+      ),
+
+      actionForAWSManagedSQL: new CfnParameter(
+        this,
+        "ActionForAWSManagedSQLParam",
+        {
+          type: "String",
+          default: "block",
+          allowedValues: ["block", "count"],
+          description: [
+            "If you chose yes for the Activate AWS Managed SQL parameter,",
+            "choose block to have AWS WAF block requests that match the rules",
+            "or choose count to have AWS WAF count requests that match the rules",
+            "instead of blocking them. If you chose to deactivate this",
+            "protection, ignore this parameter.",
           ].join(" "),
         },
       ),
@@ -185,6 +287,23 @@ export class AwsWafSecurityAutomationsStack extends Stack {
         },
       ),
 
+      actionForAWSManagedLinux: new CfnParameter(
+        this,
+        "ActionForAWSManagedLinuxParam",
+        {
+          type: "String",
+          default: "block",
+          allowedValues: ["block", "count"],
+          description: [
+            "If you chose yes for the Activate AWS Managed Linux parameter,",
+            "choose block to have AWS WAF block requests that match the rules",
+            "or choose count to have AWS WAF count requests that match the rules",
+            "instead of blocking them. If you chose to deactivate this",
+            "protection, ignore this parameter.",
+          ].join(" "),
+        },
+      ),
+
       activateAWSManagedPOSIX: new CfnParameter(
         this,
         "ActivateAWSManagedPOSIXParam",
@@ -198,6 +317,23 @@ export class AwsWafSecurityAutomationsStack extends Stack {
             "(LFI) attacks. This can help prevent attacks that expose file contents or run code for which the",
             "attacker should not have had access. Evaluate this rule group if any part of your application runs",
             "on a POSIX or POSIX-like operating system. Required WCU: 100.",
+          ].join(" "),
+        },
+      ),
+
+      actionForAWSManagedPOSIX: new CfnParameter(
+        this,
+        "ActionForAWSManagedPOSIXParam",
+        {
+          type: "String",
+          default: "block",
+          allowedValues: ["block", "count"],
+          description: [
+            "If you chose yes for the Activate AWS Managed POSIX parameter,",
+            "choose block to have AWS WAF block requests that match the rules",
+            "or choose count to have AWS WAF count requests that match the rules",
+            "instead of blocking them. If you chose to deactivate this",
+            "protection, ignore this parameter.",
           ].join(" "),
         },
       ),
@@ -219,6 +355,23 @@ export class AwsWafSecurityAutomationsStack extends Stack {
         },
       ),
 
+      actionForAWSManagedWindows: new CfnParameter(
+        this,
+        "ActionForAWSManagedWindowsParam",
+        {
+          type: "String",
+          default: "block",
+          allowedValues: ["block", "count"],
+          description: [
+            "If you chose yes for the Activate AWS Managed Windows parameter,",
+            "choose block to have AWS WAF block requests that match the rules",
+            "or choose count to have AWS WAF count requests that match the rules",
+            "instead of blocking them. If you chose to deactivate this",
+            "protection, ignore this parameter.",
+          ].join(" "),
+        },
+      ),
+
       activateAWSManagedPHP: new CfnParameter(
         this,
         "ActivateAWSManagedPHPParam",
@@ -232,6 +385,23 @@ export class AwsWafSecurityAutomationsStack extends Stack {
             "help prevent exploitation of vulnerabilities that permit an attacker to remotely run code or commands for",
             "which they are not authorized. Evaluate this rule group if PHP is installed on any server with which your",
             "application interfaces. Required WCU: 100.",
+          ].join(" "),
+        },
+      ),
+
+      actionForAWSManagedPHP: new CfnParameter(
+        this,
+        "ActionForAWSManagedPHPParam",
+        {
+          type: "String",
+          default: "block",
+          allowedValues: ["block", "count"],
+          description: [
+            "If you chose yes for the Activate AWS Managed PHP parameter,",
+            "choose block to have AWS WAF block requests that match the rules",
+            "or choose count to have AWS WAF count requests that match the rules",
+            "instead of blocking them. If you chose to deactivate this",
+            "protection, ignore this parameter.",
           ].join(" "),
         },
       ),
@@ -251,6 +421,23 @@ export class AwsWafSecurityAutomationsStack extends Stack {
         },
       ),
 
+      actionForAWSManagedWP: new CfnParameter(
+        this,
+        "ActionForAWSManagedWPParam",
+        {
+          type: "String",
+          default: "block",
+          allowedValues: ["block", "count"],
+          description: [
+            "If you chose yes for the Activate AWS Managed WordPress parameter,",
+            "choose block to have AWS WAF block requests that match the rules",
+            "or choose count to have AWS WAF count requests that match the rules",
+            "instead of blocking them. If you chose to deactivate this",
+            "protection, ignore this parameter.",
+          ].join(" "),
+        },
+      ),
+
       activateSqlInjectionProtection: new CfnParameter(
         this,
         "ActivateSqlInjectionProtectionParam",
@@ -263,6 +450,23 @@ export class AwsWafSecurityAutomationsStack extends Stack {
             "Consider activating it if you are not using Core Rule Set or AWS managed SQL database rule group. The 'yes' ",
             "option uses CONTINUE for oversized request handling by default. Note: If you customized the rule outside of",
             "CloudFormation, your changes will be overwritten after stack update.",
+          ].join(" "),
+        },
+      ),
+
+      actionForSqlInjectionProtection: new CfnParameter(
+        this,
+        "ActionForSqlInjectionProtectionParam",
+        {
+          type: "String",
+          default: "block",
+          allowedValues: ["block", "count"],
+          description: [
+            "If you chose yes for the Activate SQL Injection Protection parameter,",
+            "choose block to have AWS WAF block requests that match the rules",
+            "or choose count to have AWS WAF count requests that match the rules",
+            "instead of blocking them. If you chose to deactivate this",
+            "protection, ignore this parameter.",
           ].join(" "),
         },
       ),
@@ -298,6 +502,23 @@ export class AwsWafSecurityAutomationsStack extends Stack {
         },
       ),
 
+      actionForCrossSiteScriptingProtection: new CfnParameter(
+        this,
+        "ActionForCrossSiteScriptingProtectionParam",
+        {
+          type: "String",
+          default: "block",
+          allowedValues: ["block", "count"],
+          description: [
+            "If you chose yes for the Activate Cross-Site Scripting Protection parameter,",
+            "choose block to have AWS WAF block requests that match the rules",
+            "or choose count to have AWS WAF count requests that match the rules",
+            "instead of blocking them. If you chose to deactivate this",
+            "protection, ignore this parameter.",
+          ].join(" "),
+        },
+      ),
+
       activateHttpFloodProtection: new CfnParameter(
         this,
         "ActivateHttpFloodProtectionParam",
@@ -315,12 +536,29 @@ export class AwsWafSecurityAutomationsStack extends Stack {
         },
       ),
 
+      actionForHttpFloodProtection: new CfnParameter(
+        this,
+        "ActionForHttpFloodProtectionParam",
+        {
+          type: "String",
+          default: "block",
+          allowedValues: ["block", "count"],
+          description: [
+            "If you chose yes for the Activate HTTP Flood Protection parameter,",
+            "choose block to have AWS WAF block requests that match the rules",
+            "or choose count to have AWS WAF count requests that match the rules",
+            "instead of blocking them. If you chose to deactivate this",
+            "protection, ignore this parameter.",
+          ].join(" "),
+        },
+      ),
+
       activateScannersProbesProtection: new CfnParameter(
         this,
         "ActivateScannersProbesProtectionParam",
         {
           type: "String",
-          default: "yes - AWS Lambda log parser",
+          default: "yes - Amazon Athena log parser",
           allowedValues: [
             "yes - AWS Lambda log parser",
             "yes - Amazon Athena log parser",
@@ -328,6 +566,23 @@ export class AwsWafSecurityAutomationsStack extends Stack {
           ],
           description:
             "Choose yes to activate the component designed to block scanners and probes.",
+        },
+      ),
+
+      actionForScannersProbesProtection: new CfnParameter(
+        this,
+        "ActionForScannersProbesProtectionParam",
+        {
+          type: "String",
+          default: "block",
+          allowedValues: ["block", "count"],
+          description: [
+            "If you chose yes for the Activate Scanners and Probes Protection parameter,",
+            "choose block to have AWS WAF block requests that match the rules",
+            "or choose count to have AWS WAF count requests that match the rules",
+            "instead of blocking them. If you chose to deactivate this",
+            "protection, ignore this parameter.",
+          ].join(" "),
         },
       ),
 
@@ -345,6 +600,23 @@ export class AwsWafSecurityAutomationsStack extends Stack {
         },
       ),
 
+      actionForReputationListsProtection: new CfnParameter(
+        this,
+        "ActionForReputationListsProtectionParam",
+        {
+          type: "String",
+          default: "block",
+          allowedValues: ["block", "count"],
+          description: [
+            "If you chose yes for the Activate Reputation Lists Protection parameter,",
+            "choose block to have AWS WAF block requests that match the rules",
+            "or choose count to have AWS WAF count requests that match the rules",
+            "instead of blocking them. If you chose to deactivate this",
+            "protection, ignore this parameter.",
+          ].join(" "),
+        },
+      ),
+
       activateBadBotProtection: new CfnParameter(
         this,
         "ActivateBadBotProtectionParam",
@@ -357,9 +629,26 @@ export class AwsWafSecurityAutomationsStack extends Stack {
         },
       ),
 
+      actionForBadBotProtection: new CfnParameter(
+        this,
+        "ActionForBadBotProtectionParam",
+        {
+          type: "String",
+          default: "block",
+          allowedValues: ["block", "count"],
+          description: [
+            "If you chose yes for the Activate Bad Bot Protection parameter,",
+            "choose block to have AWS WAF block requests that match the rules",
+            "or choose count to have AWS WAF count requests that match the rules",
+            "instead of blocking them. If you chose to deactivate this",
+            "protection, ignore this parameter.",
+          ].join(" "),
+        },
+      ),
+
       endpointType: new CfnParameter(this, "EndpointType", {
         type: "String",
-        default: "CloudFront",
+        default: "ALB",
         allowedValues: ["CloudFront", "ALB"],
         description:
           "Select the resource type and then select the resource below that you want to associate with this web ACL.",
@@ -393,7 +682,7 @@ export class AwsWafSecurityAutomationsStack extends Stack {
         "AppAccessLogBucketLoggingStatusParam",
         {
           type: "String",
-          default: "no",
+          default: "yes",
           allowedValues: ["yes", "no"],
           description:
             "Choose yes if you provided an existing application access log bucket above and the server access logging for the bucket is already turned on. If you chose no, the solution will turn on server access logging for your bucket. If you deactivate Scanners & Probes Protection, ignore this parameter.",
@@ -402,7 +691,7 @@ export class AwsWafSecurityAutomationsStack extends Stack {
 
       errorThreshold: new CfnParameter(this, "ErrorThreshold", {
         type: "Number",
-        default: 50,
+        default: 20,
         minValue: 0,
         description: [
           "If you chose yes for the Activate Scanners & Probes Protection parameter, enter the maximum",
@@ -413,7 +702,7 @@ export class AwsWafSecurityAutomationsStack extends Stack {
 
       requestThreshold: new CfnParameter(this, "RequestThreshold", {
         type: "Number",
-        default: 100,
+        default: 500,
         minValue: 0,
         description: [
           "If you chose yes for the Activate HTTP Flood Protection parameter, enter the maximum",
@@ -469,7 +758,7 @@ export class AwsWafSecurityAutomationsStack extends Stack {
 
       wafBlockPeriod: new CfnParameter(this, "WAFBlockPeriod", {
         type: "Number",
-        default: 240,
+        default: 2880,
         minValue: 0,
         description: [
           "If you chose yes for the Activate Scanners & Probes Protection or HTTP Flood Lambda/Athena log",
@@ -617,7 +906,7 @@ export class AwsWafSecurityAutomationsStack extends Stack {
 
       timeWindowThreshold: new CfnParameter(this, "TimeWindowThresholdParam", {
         type: "Number",
-        default: 5,
+        default: 10,
         allowedValues: ["1", "2", "5", "10"],
         description:
           "Time window threshold in minutes for Activate Scanners & Probes Protection or HTTP Flood. Applies to both rate-based rule and lambda log parser.",
@@ -1178,6 +1467,40 @@ export class AwsWafSecurityAutomationsStack extends Stack {
           parameters.activateScannersProbesProtection.valueAsString,
         ["ActivateSqlInjectionProtectionParam"]:
           parameters.activateSqlInjectionProtection.valueAsString,
+        ["ActionForAWSManagedAIPParam"]:
+          parameters.actionForAWSManagedAIP.valueAsString,
+        ["ActionForAWSManagedAPParam"]:
+          parameters.actionForAWSManagedAP.valueAsString,
+        ["ActionForAWSManagedIPRParam"]:
+          parameters.actionForAWSManagedIPR.valueAsString,
+        ["ActionForAWSManagedKBIParam"]:
+          parameters.actionForAWSManagedKBI.valueAsString,
+        ["ActionForAWSManagedLinuxParam"]:
+          parameters.actionForAWSManagedLinux.valueAsString,
+        ["ActionForAWSManagedPHPParam"]:
+          parameters.actionForAWSManagedPHP.valueAsString,
+        ["ActionForAWSManagedPOSIXParam"]:
+          parameters.actionForAWSManagedPOSIX.valueAsString,
+        ["ActionForAWSManagedRulesParam"]:
+          parameters.actionForAWSManagedRules.valueAsString,
+        ["ActionForAWSManagedSQLParam"]:
+          parameters.actionForAWSManagedSQL.valueAsString,
+        ["ActionForAWSManagedWPParam"]:
+          parameters.actionForAWSManagedWP.valueAsString,
+        ["ActionForAWSManagedWindowsParam"]:
+          parameters.actionForAWSManagedWindows.valueAsString,
+        ["ActionForBadBotProtectionParam"]:
+          parameters.actionForBadBotProtection.valueAsString,
+        ["ActionForCrossSiteScriptingProtectionParam"]:
+          parameters.actionForCrossSiteScriptingProtection.valueAsString,
+        ["ActionForHttpFloodProtectionParam"]:
+          parameters.actionForHttpFloodProtection.valueAsString,
+        ["ActionForReputationListsProtectionParam"]:
+          parameters.actionForReputationListsProtection.valueAsString,
+        ["ActionForScannersProbesProtectionParam"]:
+          parameters.actionForScannersProbesProtection.valueAsString,
+        ["ActionForSqlInjectionProtectionParam"]:
+          parameters.actionForSqlInjectionProtection.valueAsString,
         ["LogLevel"]: solutionMapping.findInMap("Data", "LogLevel"),
         ["RequestThreshold"]: parameters.requestThreshold.valueAsString,
         ["ParentStackName"]: Fn.ref("AWS::StackName"),

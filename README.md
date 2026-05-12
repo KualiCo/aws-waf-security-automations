@@ -4,14 +4,20 @@
 
 ## Table of contents
 
-- [Solution Overview](#solution-overview)
-- [Architecture Diagram](#architecture-diagram)
-- [Customizing the Solution](#customizing-the-solution)
-  - [Prerequisites for Customization](#prerequisites-for-customization)
+- [Solution overview](#solution-overview)
+- [Architecture diagram](#architecture-diagram)
+- [Customizing the solution](#customizing-the-solution)
+  - [Prerequisites for customization](#prerequisites-for-customization)
   - [Build](#build)
-  - [Upload Deployment Assets](#upload-deployment-assets)
+      - [1. Clone the repository](#1-clone-the-repository)
+      - [2. Unit test](#2-unit-test)
+      - [3. Create S3 buckets for storing deployment assets](#3-create-s3-buckets-for-storing-deployment-assets)
+      - [4. Declare environment variables](#4-declare-environment-variables)
+      - [5. Build the solution](#5-build-the-solution)
+  - [Upload deployment assets](#upload-deployment-assets)
   - [Deploy](#deploy)
-- [File Structure](#file-structure)
+- [File structure](#file-structure)
+- [Collection of operational metrics](#collection-of-operational-metrics)
 - [License](#license)
 
 ---
@@ -106,52 +112,61 @@ AWS Solutions use two buckets:
 
 The assets in buckets must be accessible by your account.
 
-#### 4. Declare enviroment variables
+#### 4. Declare environment variables
 
-```
+```bash
 export TEMPLATE_OUTPUT_BUCKET=<YOUR_TEMPLATE_OUTPUT_BUCKET> # Name of the global bucket where CloudFormation templates are stored
 export DIST_OUTPUT_BUCKET=<YOUR_DIST_OUTPUT_BUCKET> # Name for the regional bucket where regional assets are stored
-export SOLUTION_NAME=<SOLUTION_NAME> # name of the solution.
+export LANE_NAME=<LANE_NAME> # name of the lane where the solution is deployed
+export SOLUTION_NAME=<SOLUTION_NAME>-$LANE_NAME # name of the solution, including the lane name
 export VERSION=<VERSION> # version number for the customized code
 export AWS_REGION=<AWS_REGION> # region where the solution is deployed
 ```
 
+```powershell
+cd <rootDir>/deployment
+chmod +x ./set-env.ps1 && ./set-env.ps1 -LaneName tst -AwsRegion us-west-2
+```
+
 #### 5. Build the solution
 
-```
+```bash
 cd <rootDir>/deployment
 chmod +x ./build-s3-dist.sh && ./build-s3-dist.sh $TEMPLATE_OUTPUT_BUCKET $DIST_OUTPUT_BUCKET $SOLUTION_NAME $VERSION
+```
+
+```powershell
+cd <rootDir>/deployment
+chmod +x ./build-s3-dist.sh && ./build-s3-dist.sh $Env:TEMPLATE_OUTPUT_BUCKET $Env:DIST_OUTPUT_BUCKET $Env:SOLUTION_NAME $Env:VERSION
 ```
 
 **Note**: You must install Poetry version 2 to execute script. Since version 2, the `export` command is no longer included by default in Poetry. To use it, you need to install the `poetry-plugin-export` plugin.
 
 ## Upload deployment assets
 
-```
-aws s3 cp ./deployment/global-s3-assets s3://$TEMPLATE_OUTPUT_BUCKET/$SOLUTION_NAME/$VERSION --recursive --acl bucket-owner-full-control
-aws s3 cp ./deployment/regional-s3-assets s3://$DIST_OUTPUT_BUCKET-$AWS_REGION/$SOLUTION_NAME/$VERSION --recursive --acl bucket-owner-full-control
+```bash
+cd <rootDir>/deployment
+chmod +x ./deploy-s3-dist.sh && ./deploy-s3-dist.sh $TEMPLATE_OUTPUT_BUCKET $DIST_OUTPUT_BUCKET $SOLUTION_NAME $VERSION
 ```
 
-**Note:** You must use a proper ACL and profile for the copy operation as applicable. Using randomized bucket names is recommended.
+```powershell
+cd <rootDir>/deployment
+chmod +x ./deploy-s3-dist.sh && ./deploy-s3-dist.sh $Env:TEMPLATE_OUTPUT_BUCKET $Env:DIST_OUTPUT_BUCKET $Env:SOLUTION_NAME $Env:VERSION
+```
+
+**Note:** You must use a proper ACL and profile (saml2aws Networking account) for the copy operation as applicable. Using randomized bucket names is recommended.
 
 
 ## Deploy
 
-When deploying this solution you have two options:
-
-#### 1. Option to deploy the template in the S3 bucket
-- From your designated S3 bucket where you uploaded the deployment assets, copy the link location for the `aws-waf-security-automations.template` file.
-- Using AWS CloudFormation, launch the Security Automations for AWS WAF solution stack using the copied Amazon S3 link for the `aws-waf-security-automations.template` file.
-
-#### 2. Option to deploy using the ```cdk deploy``` command.
-
-First you will need to run ```cd source/infrastructure``` in order to run the cdk deploy command.
-
-With this option, you should specify a couple of the parameters depending on your use case. Otherwise the default values will be picked. If you decide to go with the default values make sure you specify the ```AppAccessLogBucket``` parameter otherwise your deployment will fail. For more information about our parameters you can read our Implementation guide.
-
-An example cdk deploy command which specifies a couple parameters: 
+```bash
+cd <rootDir>/deployment
+chmod +x ./deploy-cdk.sh && ./deploy-cdk.sh $TEMPLATE_OUTPUT_BUCKET $DIST_OUTPUT_BUCKET $SOLUTION_NAME $VERSION
 ```
-cdk deploy AwsWafSecurityAutomations --parameters ActivateAWSManagedAIPParam=yes --parameters AppAccessLogBucket=appbucket --parameters ActivateScannersProbesProtectionParam="yes - Amazon Athena log parser"
+
+```powershell
+cd <rootDir>/deployment
+chmod +x ./deploy-cdk.sh && ./deploy-cdk.sh $Env:TEMPLATE_OUTPUT_BUCKET $Env:DIST_OUTPUT_BUCKET $Env:SOLUTION_NAME $Env:VERSION
 ```
 
 **Note:** When deploying the template for your CloudFront endpoint, you can launch it only from the `us-east-1` Region.

@@ -14,7 +14,7 @@ jest.mock("../../infrastructure/lib/constants/waf-constants", () => {
   ); // Import the actual module
   return {
     ...actual,
-    distVersion: "v4.1.0",
+    distVersion: "v4.2.0",
     templateOutputBucket: "solutions-reference",
     distOutputBucket: "solutions",
     solutionName: "security-automations-for-aws-waf",
@@ -40,7 +40,7 @@ describe("WAF firehose-athena end-to-end", () => {
 
     const stack = new AwsWafSecurityAutomationsStack(
       app,
-      "aws-waf-security-automations",
+      AwsWafSecurityAutomationsStack.ID,
       {
         analyticsReporting: false, // CDK::Metadata breaks deployment in some regions
         synthesizer: new DefaultStackSynthesizer({

@@ -1,4 +1,6 @@
-#!/bin/bash
+#!/usr/bin/env bash
+# Copyright 2005-2025 Kuali, Inc.  All rights reserved.
+# Modified in accordance with the license.
 #
 # Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 # SPDX-License-Identifier: Apache-2.0
@@ -10,7 +12,7 @@
 # cd deployment 
 # ./build-s3-dist.sh source-bucket-base-name trademarked-solution-name version-code 
 # 
-# Paramenters: 
+# Parameters: 
 #  - template-bucket: Name for the S3 bucket location where the templates are found
 #  - source-bucket-base-name: Name for the S3 bucket location where the Lambda source 
 #    code is deployed. The template will append '-[region_name]' to this bucket name.
@@ -22,8 +24,8 @@
 # 
 # Check to see if input has been provided: 
 if [ -z "$1" ] || [ -z "$2" ] || [ -z "$3" ] || [ -z "$4" ]; then
-    echo "Please provide the base template-bucket, source-bucket-base-name, trademark-approved-solution-name and version" 
-    echo "For example: ./build-s3-dist.sh solutions solutions-code trademarked-solution-name v3.0" 
+    echo "Please provide the base template-bucket, source-bucket-base-name, trademark-approved-solution-name (including lane) and version" 
+    echo "For example: ./build-s3-dist.sh cdk-hnb659fds-assets-461840362716-us-west-2 cdk-hnb659fds-assets-461840362716 security-automations-for-aws-waf-tst v4.2.0" 
     exit 1 
 fi 
 
@@ -93,8 +95,8 @@ echo "--------------------------------------------------------------------------
 # Install the global aws-cdk package
 echo "cd $resource_dir"
 cd $resource_dir
-echo "npm ci"
-npm ci
+echo "yarn clean && yarn install"
+yarn clean && yarn install
 
 echo " ./node_modules/aws-cdk/bin/cdk synth  --asset-metadata false --path-metadata false --version-reporting false --quiet"
 ./node_modules/aws-cdk/bin/cdk synth --asset-metadata false --path-metadata false --version-reporting false --quiet
